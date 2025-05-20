@@ -1,12 +1,14 @@
 package com.stonehnh.dto.response;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.sql.Date;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class CustomerResponseDto {
     private String customerId;
     private String customerName;

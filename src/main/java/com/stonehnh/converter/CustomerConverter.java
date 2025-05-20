@@ -9,7 +9,11 @@ import java.util.List;
 
 public class CustomerConverter {
 
-    // hàm đổi từ db lên thành dto để lên frontend
+    /**
+     * Hàm convert data từ database lên thành dto để lên frontend
+     *
+     * @return List customer đã được convert từ entity -> dto
+     */
     public static List<CustomerResponseDto> toDtoList(List<Customer> customers) {
         List<CustomerResponseDto> dtoList = new ArrayList<>();
 
@@ -31,7 +35,31 @@ public class CustomerConverter {
         return dtoList;
     }
 
-    //hàm đổi từ frontend từ dto thành entity để đua xuống backend
+    /**
+     * Hàm convert data từ database lên thành dto để lên frontend
+     *
+     * @return 1 customer đã được convert từ entity -> dto
+     */
+    public static CustomerResponseDto toDto(Customer customer){
+        return CustomerResponseDto.builder()
+                .customerId(customer.getCustomerId())
+                .customerName(customer.getCustomerName())
+                .email(customer.getEmail())
+                .phoneNumber(customer.getPhoneNumber())
+                .customerAddress(customer.getCustomerAddress())
+                .createdDate(customer.getCreatedDate())
+                .customerPicture(customer.getCustomerPicture())
+                .verifyStatus(customer.getVerifyStatus())
+                .accountStatus(customer.getAccountStatus())
+                .build();
+    }
+
+
+    /**
+     * Hàm convert data từ frontend xuống entity backend để làm việc với database
+     *
+     * @return List customer đã được convert từ dto -> entity
+     */
     public static Customer toEntity(CreationCustomerDto customerDto) {
         Customer customer = new Customer();
         customer.setCustomerId(customerDto.getCustomerId());
