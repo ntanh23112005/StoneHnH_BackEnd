@@ -46,7 +46,7 @@ public class CustomerController {
     }
 
     /**
-     * Xóa sinh viên
+     * Xóa customer theo Id
      */
     @DeleteMapping
     public ResponseEntity<Integer> deleteStudent(@RequestParam String customerId) {
@@ -54,7 +54,7 @@ public class CustomerController {
     }
 
     /**
-     * Thông tin sinh viên theo student Code
+     * Thông tin customer theo customerId
      */
     @GetMapping("/{customerId}")
     public ApiResponse<Object> getStudentByStudentCode(@PathVariable String customerId) {
