@@ -45,6 +45,8 @@ public interface CustomerMapper {
 
     /**
      * Xoá customer theo ID
+     *
+     * @return Số dòng bị ảnh hưởng
      */
     @Delete("DELETE FROM customers WHERE customer_id = #{customerId}")
     int deleteCustomerById(@Param("customerId") String customerId);
