@@ -4,6 +4,8 @@ import com.stonehnh.converter.CustomerRoleConverter;
 import com.stonehnh.dto.request.CreationCustomerRoleDto;
 import com.stonehnh.dto.response.CustomerRoleResponseDto;
 import com.stonehnh.entity.CustomerRole;
+import com.stonehnh.enums.ErrorCode;
+import com.stonehnh.exception.AppException;
 import com.stonehnh.mapper.CustomerRoleMapper;
 import com.stonehnh.service.CustomerRoleService;
 import org.springframework.stereotype.Service;
@@ -29,21 +31,47 @@ public class CustomerRoleServiceImpl implements CustomerRoleService {
 
     @Override
     public int createNewCustomerRole(CreationCustomerRoleDto customerRoleDto) {
-        return 0;
+        /*
+         * TODO: Xử lý logic riêng (nếu có)
+         *
+         * TODO: Convert from dto to entity to insert database
+         *
+         * */
+        CustomerRole customerRole = CustomerRoleConverter.toEntity(customerRoleDto);
+        return customerRoleMapper.insertCustomerRole(customerRole);
     }
 
     @Override
     public int updateCustomerRole(String customerId, CustomerRole customerRole) {
-        return 0;
+        boolean isExistedCustomer = customerRoleMapper.isExistedCustomerById(customerId);
+        if (!isExistedCustomer){
+            // TODO: Xử lý theo nghiệp vụ
+            throw new AppException(ErrorCode.CUSTOMER_NOT_EXISTED);
+        }
+        return customerRoleMapper.updateCustomerRole(customerRole);
     }
 
     @Override
     public int deleteCustomerRole(String customerId) {
-        return 0;
+        // TODO: Xử lý theo nghiệp vụ
+        boolean isExistedCustomer = customerRoleMapper.isExistedCustomerById(customerId);
+        if(!isExistedCustomer){
+            // TODO: Xử lý theo nghiệp vụ
+            throw new AppException(ErrorCode.CUSTOMER_NOT_EXISTED);
+        }
+        return customerRoleMapper.deleteCustomerById(customerId);
     }
 
     @Override
     public CustomerRoleResponseDto findCustomerRoleByCustomerId(String customerId) {
-        return null;
+        CustomerRole customerRole = customerRoleMapper.findCustomerRoleByCustomerId(customerId);
+        /*
+        * TODO: Xử lý theo nghiệp vụ
+        * */
+        if (customerRole == null) {
+            throw new AppException(ErrorCode.CUSTOMER_NOT_EXISTED);
+        }
+
+        return CustomerRoleConverter.toDto(customerRole);
     }
 }

@@ -52,4 +52,14 @@ public interface CustomerRoleMapper {
     @Select("SELECT id, customer_id, role_id FROM customer_roles" +
             "WHERE customer_id = #{customerId}")
     CustomerRole findCustomerRoleByCustomerId(@Param("customerId") String customerId);
+
+    /**
+     * Kiểm tra sự tồn tại của customer theo ID
+     *
+     * @param customerId Mã customer cần kiểm tra
+     * @return true nếu tồn tại, false nếu không
+     */
+    @Select("SELECT COUNT(*) > 0 FROM customer_roles WHERE customer_id = #{customerId}")
+    boolean isExistedCustomerById(@Param("customerId") String customerId);
+
 }

@@ -56,7 +56,7 @@ public class CustomerServiceImpl implements CustomerService {
         boolean isExistedCustomer = customerMapper.isExistedCustomerById(id);
         if(!isExistedCustomer){
             // TODO: Xử lý theo nghiệp vụ
-            throw new AppException(ErrorCode.CUSTOMER_NOT_EXISTED);
+            throw new AppException(ErrorCode.CUSTOMER_NOT_FOUND);
         }
 
         return customerMapper.updateCustomer(customer);
@@ -72,7 +72,7 @@ public class CustomerServiceImpl implements CustomerService {
         boolean isExistedCustomer = customerMapper.isExistedCustomerById(customerId);
         if(!isExistedCustomer){
             // TODO: Xử lý theo nghiệp vụ
-            throw new AppException(ErrorCode.CUSTOMER_NOT_EXISTED);
+            throw new AppException(ErrorCode.CUSTOMER_NOT_FOUND);
         }
 
         return customerMapper.deleteCustomerById(customerId);
@@ -87,7 +87,7 @@ public class CustomerServiceImpl implements CustomerService {
         * */
 
         if(customer == null){
-            throw new AppException(ErrorCode.CUSTOMER_NOT_EXISTED);
+            throw new AppException(ErrorCode.CUSTOMER_NOT_FOUND);
         }
 
         return CustomerConverter.toDto(customer);
