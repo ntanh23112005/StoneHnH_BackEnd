@@ -46,5 +46,6 @@ public interface HomestayImageService {
      * @param id id ảnh cần tìm
      * @return ảnh dạng DTO
      */
-//    HomestayImagesResponseDto findImageById(int id);
+    HomestayImagesResponseDto findImageById(int id);
+
 }
