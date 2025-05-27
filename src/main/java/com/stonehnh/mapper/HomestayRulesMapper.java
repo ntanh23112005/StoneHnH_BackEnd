@@ -1,10 +1,11 @@
 package com.stonehnh.mapper;
 
-import com.stonehnh.entity.HomestayRules;
+import com.stonehnh.entity.HomestayRule;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
+@Mapper
 public interface HomestayRulesMapper {
     /**
      * Lấy danh sách tất cả nội quy homestay.
@@ -12,7 +13,7 @@ public interface HomestayRulesMapper {
      * @return Danh sách các đối tượng HomestayRule.
      */
     @Select("SELECT id, homestay_id, rule_text, policy_text, created_at FROM homestay_rules")
-    List<HomestayRules> findAllRules();
+    List<HomestayRule> findAllRules();
 
     /**
      * Lấy nội quy homestay theo ID.
@@ -21,7 +22,7 @@ public interface HomestayRulesMapper {
      * @return Đối tượng HomestayRule nếu tồn tại, null nếu không.
      */
     @Select("SELECT id, homestay_id, rule_text, policy_text, created_at FROM homestay_rules WHERE id = #{id}")
-    HomestayRules findRuleById(@Param("id") int id);
+    HomestayRule findRuleById(@Param("id") int id);
 
     /**
      * Lấy danh sách nội quy của một homestay theo mã homestay.
@@ -30,7 +31,7 @@ public interface HomestayRulesMapper {
      * @return Danh sách các đối tượng HomestayRule.
      */
     @Select("SELECT id, homestay_id, rule_text, policy_text, created_at FROM homestay_rules WHERE homestay_id = #{homestayId}")
-    List<HomestayRules> findRulesByHomestayId(@Param("homestayId") String homestayId);
+    List<HomestayRule> findRulesByHomestayId(@Param("homestayId") String homestayId);
 
     /**
      * Thêm mới một nội quy cho homestay.
@@ -40,7 +41,7 @@ public interface HomestayRulesMapper {
      */
     @Insert("INSERT INTO homestay_rules (id, homestay_id, rule_text, policy_text, created_at) " +
             "VALUES (#{rule.id}, #{rule.homestayId}, #{rule.ruleText}, #{rule.policyText}, #{rule.createdAt})")
-    int insertRule(@Param("rule") HomestayRules rule);
+    int insertRule(@Param("rule") HomestayRule rule);
 
     /**
      * Cập nhật nội quy homestay theo ID.
@@ -54,7 +55,7 @@ public interface HomestayRulesMapper {
             "policy_text = #{rule.policyText}, " +
             "created_at = #{rule.createdAt} " +
             "WHERE id = #{rule.id}")
-    int updateRule(@Param("rule") HomestayRules rule);
+    int updateRule(@Param("rule") HomestayRule rule);
 
     /**
      * Xóa nội quy homestay theo ID.

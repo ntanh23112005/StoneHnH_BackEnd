@@ -46,7 +46,7 @@ public class CustomerRoleServiceImpl implements CustomerRoleService {
         boolean isExistedCustomer = customerRoleMapper.isExistedCustomerById(customerId);
         if (!isExistedCustomer){
             // TODO: Xử lý theo nghiệp vụ
-            throw new AppException(ErrorCode.CUSTOMER_NOT_EXISTED);
+            throw new AppException(ErrorCode.CUSTOMER_NOT_FOUND);
         }
         return customerRoleMapper.updateCustomerRole(customerRole);
     }
@@ -57,7 +57,7 @@ public class CustomerRoleServiceImpl implements CustomerRoleService {
         boolean isExistedCustomer = customerRoleMapper.isExistedCustomerById(customerId);
         if(!isExistedCustomer){
             // TODO: Xử lý theo nghiệp vụ
-            throw new AppException(ErrorCode.CUSTOMER_NOT_EXISTED);
+            throw new AppException(ErrorCode.CUSTOMER_NOT_FOUND);
         }
         return customerRoleMapper.deleteCustomerById(customerId);
     }
@@ -69,7 +69,7 @@ public class CustomerRoleServiceImpl implements CustomerRoleService {
         * TODO: Xử lý theo nghiệp vụ
         * */
         if (customerRole == null) {
-            throw new AppException(ErrorCode.CUSTOMER_NOT_EXISTED);
+            throw new AppException(ErrorCode.CUSTOMER_NOT_FOUND);
         }
 
         return CustomerRoleConverter.toDto(customerRole);

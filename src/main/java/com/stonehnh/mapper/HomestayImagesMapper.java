@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
+@Mapper
 public interface HomestayImagesMapper {
     /**
      * Lấy danh sách tất cả ảnh của homestay.

@@ -1,9 +1,8 @@
 package com.stonehnh.converter;
 
-import com.stonehnh.dto.request.CreationHomestayImagesDto;
 import com.stonehnh.dto.request.CreationHomestayRulesDto;
 import com.stonehnh.dto.response.HomestayRulesResponseDto;
-import com.stonehnh.entity.HomestayRules;
+import com.stonehnh.entity.HomestayRule;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +11,7 @@ public class HomestayRulesConverter {
     /**
      * Convert 1 entity -> DTO
      */
-    public static HomestayRulesResponseDto toDto(HomestayRules entity) {
+    public static HomestayRulesResponseDto toDto(HomestayRule entity) {
         return HomestayRulesResponseDto.builder()
                 .id(entity.getId())
                 .homestayId(entity.getHomestayId())
@@ -25,9 +24,9 @@ public class HomestayRulesConverter {
     /**
      * Convert List entity -> List DTO
      */
-    public static List<HomestayRulesResponseDto> toDtoList(List<HomestayRules> entities) {
+    public static List<HomestayRulesResponseDto> toDtoList(List<HomestayRule> entities) {
         List<HomestayRulesResponseDto> dtoList = new ArrayList<>();
-        for (HomestayRules entity : entities) {
+        for (HomestayRule entity : entities) {
             dtoList.add(toDto(entity));
         }
         return dtoList;
@@ -36,8 +35,8 @@ public class HomestayRulesConverter {
     /**
      * Convert 1 DTO -> entity
      */
-    public static HomestayRules toEntity(CreationHomestayRulesDto dto) {
-        HomestayRules entity = new HomestayRules();
+    public static HomestayRule toEntity(CreationHomestayRulesDto dto) {
+        HomestayRule entity = new HomestayRule();
         entity.setId(dto.getId());
         entity.setHomestayId(dto.getHomestayId());
         entity.setRuleText(dto.getRuleText());
@@ -49,8 +48,8 @@ public class HomestayRulesConverter {
     /**
      * Convert List DTO -> List entity
      */
-    public static List<HomestayRules> toEntityList(List<CreationHomestayRulesDto> dtoList) {
-        List<HomestayRules> entityList = new ArrayList<>();
+    public static List<HomestayRule> toEntityList(List<CreationHomestayRulesDto> dtoList) {
+        List<HomestayRule> entityList = new ArrayList<>();
         for (CreationHomestayRulesDto dto : dtoList) {
             entityList.add(toEntity(dto));
         }

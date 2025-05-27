@@ -33,7 +33,7 @@ public interface CustomerMapper {
 
     /**
      * Cập nhật thông tin customer
-     *
+     * @param customer 1 customer đã có sẵn
      * @return Số dòng bị ảnh hưởng
      */
     @Update("UPDATE customers SET customer_name = #{customer.customerName}, email = #{customer.email}, " +
@@ -45,7 +45,7 @@ public interface CustomerMapper {
 
     /**
      * Xoá customer theo ID
-     *
+     * @param customerId mã id của customer cần xóa
      * @return Số dòng bị ảnh hưởng
      */
     @Delete("DELETE FROM customers WHERE customer_id = #{customerId}")
@@ -53,7 +53,6 @@ public interface CustomerMapper {
 
     /**
      * Lấy thông tin customer theo ID
-     *
      * @param customerId Mã customer cần tìm
      * @return Thông tin customer nếu tồn tại, ngược lại trả về null
      */
@@ -64,7 +63,6 @@ public interface CustomerMapper {
 
     /**
      * Kiểm tra sự tồn tại của customer theo ID
-     *
      * @param customerId Mã customer cần kiểm tra
      * @return true nếu tồn tại, false nếu không
      */

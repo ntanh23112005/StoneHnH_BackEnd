@@ -5,16 +5,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.sql.Date;
-
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class HomestayRules {
-    private int id;
-    private String homestayId;
-    private String ruleText;
-    private String policyText;
-    private Date createdAt;
+public class Booking {
+    private String bookingId;
+    private String customerId;
+    private Double totalPrice;
+    private Integer paymentStatus;
 }

@@ -39,7 +39,7 @@ public class PaymentServiceImpl implements PaymentService {
     public int updatePayment(String paymentId, CreationPaymentDto paymentDto) {
         boolean exists = paymentMapper.isExistedPaymentById(paymentId);
         if (!exists) {
-            throw new AppException(ErrorCode.PAYMENT_NOT_EXISTED);
+            throw new AppException(ErrorCode.PAYMENT_NOT_FOUND);
         }
         paymentDto.setPaymentId(paymentId);
         return paymentMapper.updatePayment(PaymentConverter.toEntity(paymentDto));
@@ -49,7 +49,7 @@ public class PaymentServiceImpl implements PaymentService {
     public int deletePayment(String paymentId) {
         boolean exists = paymentMapper.isExistedPaymentById(paymentId);
         if (!exists) {
-            throw new AppException(ErrorCode.PAYMENT_NOT_EXISTED);
+            throw new AppException(ErrorCode.PAYMENT_NOT_FOUND);
         }
         return paymentMapper.deletePaymentById(paymentId);
     }
@@ -58,7 +58,7 @@ public class PaymentServiceImpl implements PaymentService {
     public PaymentResponseDto findPaymentById(String paymentId) {
         Payment payment = paymentMapper.findPaymentById(paymentId);
         if (payment == null) {
-            throw new AppException(ErrorCode.PAYMENT_NOT_EXISTED);
+            throw new AppException(ErrorCode.PAYMENT_NOT_FOUND);
         }
         return PaymentConverter.toDto(payment);
     }

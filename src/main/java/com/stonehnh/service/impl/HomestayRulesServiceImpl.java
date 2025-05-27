@@ -3,7 +3,7 @@ package com.stonehnh.service.impl;
 import com.stonehnh.converter.HomestayRulesConverter;
 import com.stonehnh.dto.request.CreationHomestayRulesDto;
 import com.stonehnh.dto.response.HomestayRulesResponseDto;
-import com.stonehnh.entity.HomestayRules;
+import com.stonehnh.entity.HomestayRule;
 import com.stonehnh.enums.ErrorCode;
 import com.stonehnh.exception.AppException;
 import com.stonehnh.mapper.HomestayRulesMapper;
@@ -23,13 +23,13 @@ import java.util.List;
 
         @Override
         public List<HomestayRulesResponseDto> getRulesByHomestayId(String homestayId) {
-            List<HomestayRules> rules = homestayRulesMapper.findRulesByHomestayId(homestayId);
+            List<HomestayRule> rules = homestayRulesMapper.findRulesByHomestayId(homestayId);
             return HomestayRulesConverter.toDtoList(rules);
         }
 
         @Override
         public int createRule(CreationHomestayRulesDto dto) {
-            HomestayRules entity = HomestayRulesConverter.toEntity(dto);
+            HomestayRule entity = HomestayRulesConverter.toEntity(dto);
             return homestayRulesMapper.insertRule(entity);
         }
 
@@ -37,10 +37,10 @@ import java.util.List;
         public int updateRule(int id, CreationHomestayRulesDto dto) {
             boolean exists = homestayRulesMapper.existsRuleById(id);
             if (!exists) {
-                throw new AppException(ErrorCode.RULE_NOT_FOUND);
+                throw new AppException(ErrorCode.HOMESTAY_RULE_NOT_FOUND);
             }
 
-            HomestayRules entity = HomestayRulesConverter.toEntity(dto);
+            HomestayRule entity = HomestayRulesConverter.toEntity(dto);
             entity.setId(id);
             return homestayRulesMapper.updateRule(entity);
         }
@@ -49,7 +49,7 @@ import java.util.List;
         public int deleteRule(int id) {
             boolean exists = homestayRulesMapper.existsRuleById(id);
             if (!exists) {
-                throw new AppException(ErrorCode.RULE_NOT_FOUND);
+                throw new AppException(ErrorCode.HOMESTAY_RULE_NOT_FOUND);
             }
 
             return homestayRulesMapper.deleteRuleById(id);
@@ -57,9 +57,9 @@ import java.util.List;
 
         @Override
         public HomestayRulesResponseDto findRuleById(int id) {
-            HomestayRules rule = homestayRulesMapper.findRuleById(id);
+            HomestayRule rule = homestayRulesMapper.findRuleById(id);
             if (rule == null) {
-                throw new AppException(ErrorCode.RULE_NOT_FOUND);
+                throw new AppException(ErrorCode.HOMESTAY_RULE_NOT_FOUND);
             }
             return HomestayRulesConverter.toDto(rule);
         }

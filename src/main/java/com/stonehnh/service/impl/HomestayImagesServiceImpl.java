@@ -38,7 +38,7 @@ public class HomestayImagesServiceImpl implements HomestayImageService {
     public int updateImage(int id, CreationHomestayImagesDto dto) {
         boolean exists = homestayImagesMapper.existsImageById(id);
         if (!exists) {
-            throw new AppException(ErrorCode.IMAGE_NOT_FOUND);
+            throw new AppException(ErrorCode.HOMESTAY_IMAGE_NOT_FOUND);
         }
 
         HomestayImages entity = HomestayImagesConverter.toEntity(dto);
@@ -50,7 +50,7 @@ public class HomestayImagesServiceImpl implements HomestayImageService {
     public int deleteImage(int id) {
         boolean exists = homestayImagesMapper.existsImageById(id);
         if (!exists) {
-            throw new AppException(ErrorCode.IMAGE_NOT_FOUND);
+            throw new AppException(ErrorCode.HOMESTAY_IMAGE_NOT_FOUND);
         }
 
         return homestayImagesMapper.deleteImageById(id);

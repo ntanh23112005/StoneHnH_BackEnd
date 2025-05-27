@@ -16,7 +16,7 @@ public class GlobalExceptionHandler {
                 ApiResponse.builder()
                         .success(false)
                         .data(null)
-                        .message(ErrorCode.BAD_SQL_EXCEPTION.getMessage())
+                        .message(ErrorCode.SQL_ERROR.getMessage())
                         .build()
         );
     }

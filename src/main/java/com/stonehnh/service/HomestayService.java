@@ -1,6 +1,5 @@
 package com.stonehnh.service;
 
-import com.stonehnh.dto.*;
 import com.stonehnh.dto.request.CreationHomestayDto;
 import com.stonehnh.dto.response.HomestayResponseDto;
 import com.stonehnh.entity.Homestay;
@@ -25,7 +24,7 @@ public interface HomestayService {
     /**
      * Cập nhật homestay theo ID
      * @param homestayId ID cần cập nhật
-     * @param homestay entity mới
+     * @param homestayDto entity mới
      * @return Số dòng bị ảnh hưởng
      */
     int updateHomestay(String homestayId, CreationHomestayDto homestayDto);
