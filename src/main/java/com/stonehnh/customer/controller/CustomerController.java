@@ -50,7 +50,7 @@ public class CustomerController {
      */
     @DeleteMapping
     public ResponseEntity<Integer> deleteStudent(@RequestParam String customerId) {
-        return ResponseEntity.ok().body(customerService.deleteCustomer(customerId));
+        return ResponseEntity.ok().body(customerService.deleteCustomerId(customerId));
     }
 
     /**

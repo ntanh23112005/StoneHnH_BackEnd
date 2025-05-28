@@ -58,7 +58,7 @@ public class CustomerConverter {
     /**
      * Hàm convert data từ frontend xuống entity backend để làm việc với database
      *
-     * @return List customer đã được convert từ dto -> entity
+     * @return 1 customer đã được convert từ dto -> entity
      */
     public static Customer toEntity(CreationCustomerDto customerDto) {
         Customer customer = new Customer();

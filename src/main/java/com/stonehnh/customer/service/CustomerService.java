@@ -30,7 +30,7 @@ public interface CustomerService {
      * Xóa 1 Customer
      * @return Số dòng bị ảnh hưởng
      */
-    int deleteCustomer(String customerId);
+    int deleteCustomerId(String customerId);
 
     /**
      * Tìm 1 customer theo Customer Id

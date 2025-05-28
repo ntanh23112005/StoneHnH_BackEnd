@@ -63,7 +63,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public int deleteCustomer(String customerId) {
+    public int deleteCustomerId(String customerId) {
         /*
          * TODO: Xử lý logic nếu có
          * */
