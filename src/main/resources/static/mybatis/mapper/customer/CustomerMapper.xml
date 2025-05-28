@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.stonehnh.customer.mapper.CustomerMapper">
+
+    <!-- ResultMap: map DB → Customer entity -->
+    <resultMap id="CustomerResultMap" type="Customer">
+        <id property="customerId" column="customer_id"/>
+        <result property="customerName" column="customer_name"/>
+        <result property="email" column="email"/>
+        <result property="phoneNumber" column="phone_number"/>
+        <result property="password" column="password"/>
+        <result property="customerAddress" column="customer_address"/>
+        <result property="createdDate" column="created_date"/>
+        <result property="customerPicture" column="customer_picture"/>
+        <result property="verifyStatus" column="verify_status"/>
+        <result property="accountStatus" column="account_status"/>
+    </resultMap>
+
+    <!-- Dynamic query: lọc theo accountStatus + optional email chứa từ khóa -->
+    <select id="selectCustomersByStatus" resultMap="CustomerResultMap">
+        SELECT *
+        FROM customers
+        <where>
+            <if test="accountStatus != null">
+                account_status = #{accountStatus}
+            </if>
+            <if test="emailKeyword != null and emailKeyword != ''">
+                AND email LIKE CONCAT('%', #{emailKeyword}, '%')
+            </if>
+        </where>
+        ORDER BY created_date DESC
+    </select>
+
+    <!-- Example: đếm số account theo trạng thái -->
+    <select id="countCustomersByStatus" resultType="int">
+        SELECT COUNT(*)
+        FROM customers
+        WHERE account_status = #{accountStatus}
+    </select>
+
+    <!-- Example: cập nhật trạng thái tài khoản -->
+    <update id="updateAccountStatus">
+        UPDATE customers
+        SET account_status = #{newStatus}
+        WHERE customer_id = #{customerId}
+    </update>
+
+</mapper>
