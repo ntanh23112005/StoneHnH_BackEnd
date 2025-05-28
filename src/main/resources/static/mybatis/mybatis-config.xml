@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+    <!-- Global Settings -->
+    <settings>
+        <!-- DB snake_case ↔ Java camelCase -->
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+        <!-- Log SQL to console -->
+        <setting name="logImpl" value="STDOUT_LOGGING"/>
+    </settings>
+
+    <!-- Type Aliases (scan all entity packages) -->
+    <typeAliases>
+        <package name="com.stonehnh.customer.entity"/>
+        <package name="com.stonehnh.homestay.entity"/>
+        <package name="com.stonehnh.booking.entity"/>
+        <package name="com.stonehnh.owner.entity"/>
+        <package name="com.stonehnh.payment.entity"/>
+        <package name="com.stonehnh.review.entity"/>
+        <package name="com.stonehnh.verification.entity"/>
+    </typeAliases>
+
+    <!-- Mappers -->
+    <mappers>
+        <!-- Annotation-based mappers ( Use Annotation) -->
+        <package name="com.stonehnh.customer.mapper"/>
+        <package name="com.stonehnh.homestay.mapper"/>
+        <package name="com.stonehnh.booking.mapper"/>
+        <package name="com.stonehnh.owner.mapper"/>
+        <package name="com.stonehnh.payment.mapper"/>
+        <package name="com.stonehnh.review.mapper"/>
+        <package name="com.stonehnh.verification.mapper"/>
+
+        <!-- Explicit XML mappers (if any) (Use File mapper.xml)-->
+        <!-- Example -->
+        <!-- <mapper resource="mappers/CustomerMapper.xml"/> -->
+        <!-- <mapper resource="mappers/HomestayMapper.xml"/> -->
+    </mappers>
+</configuration>
