@@ -3,9 +3,11 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
+<!--Mapper bị ảnh hưởng-->
 <mapper namespace="com.stonehnh.customer.mapper.CustomerMapper">
 
     <!-- ResultMap: map DB → Customer entity -->
+<!--    Ánh xạ Entity với table DB-->
     <resultMap id="CustomerResultMap" type="Customer">
         <id property="customerId" column="customer_id"/>
         <result property="customerName" column="customer_name"/>
@@ -20,6 +22,7 @@
     </resultMap>
 
     <!-- Dynamic query: lọc theo accountStatus + optional email chứa từ khóa -->
+<!--    Câu truy vấn-->
     <select id="selectCustomersByStatus" resultMap="CustomerResultMap">
         SELECT *
         FROM customers

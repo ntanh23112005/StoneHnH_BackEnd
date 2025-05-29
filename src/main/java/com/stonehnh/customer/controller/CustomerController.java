@@ -29,7 +29,7 @@ public class CustomerController {
      * Thêm customer mới
      */
     @PostMapping
-    public ApiResponse<Object> createNewStudent(@RequestBody CreationCustomerDto creationCustomerDto) {
+    public ApiResponse<Object> createNewCustomer(@RequestBody CreationCustomerDto creationCustomerDto) {
         return ApiResponse.builder()
                 .success(true)
                 .message("Success")
@@ -41,7 +41,7 @@ public class CustomerController {
      * Cập nhật thông tin customer
      */
     @PutMapping
-    public ResponseEntity<Integer> updateStudent(@RequestParam String id, @RequestBody Customer customer) {
+    public ResponseEntity<Integer> updateCustomer(@RequestParam String id, @RequestBody Customer customer) {
         return ResponseEntity.ok().body(customerService.updateCustomer(id, customer));
     }
 
@@ -49,7 +49,7 @@ public class CustomerController {
      * Xóa customer theo Id
      */
     @DeleteMapping
-    public ResponseEntity<Integer> deleteStudent(@RequestParam String customerId) {
+    public ResponseEntity<Integer> deleteCustomer(@RequestParam String customerId) {
         return ResponseEntity.ok().body(customerService.deleteCustomerId(customerId));
     }
 
@@ -57,11 +57,12 @@ public class CustomerController {
      * Thông tin customer theo customerId
      */
     @GetMapping("/{customerId}")
-    public ApiResponse<Object> getStudentByStudentCode(@PathVariable String customerId) {
+    public ApiResponse<Object> getCustomerByCustomerId(@PathVariable String customerId) {
         return ApiResponse.builder()
                 .success(true)
                 .message("Success")
                 .data(customerService.findCustomerByCustomerId(customerId))
                 .build();
     }
+
 }

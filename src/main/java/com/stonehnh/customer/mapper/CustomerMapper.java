@@ -68,4 +68,5 @@ public interface CustomerMapper {
      */
     @Select("SELECT COUNT(*) > 0 FROM customers WHERE customer_id = #{customerId}")
     boolean isExistedCustomerById(@Param("customerId") String customerId);
+
 }

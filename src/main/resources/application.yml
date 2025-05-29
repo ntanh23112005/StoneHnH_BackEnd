@@ -1,25 +1,37 @@
-# Server port
 server:
-  port: 8080
+  port: 8080  # Cổng server Spring Boot chạy local (http://localhost:8080)
 
 spring:
   application:
-    name: main
-
-  jpa:
-    hibernate:
-      ddl-auto: update
+    name: stonehnh-backend  # Tên app hiển thị trong logs hoặc actuator
 
   datasource:
-    url: jdbc:mysql://localhost:3306/stonehnh_data
-    username: root
-    password: 123456
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/stonehnh_data  # Kết nối database MySQL tên stonehnh_data
+    username: root  # Tài khoản DB
+    password: 123456  # Mật khẩu DB
+    driver-class-name: com.mysql.cj.jdbc.Driver  # Driver MySQL 8.x
 
 mybatis:
-  type-aliases-package: com.example.domain.model
-  type-handlers-package: com.example.typehandler
+  type-aliases-package: com.stonehnh  # Đặt alias ngắn cho entity, ví dụ: Customer thay vì com.stonehnh.customer.entity.Customer
+  mapper-locations: classpath:/static/mybatis/mapper/*.xml  # Nơi chứa các file XML mapper phức tạp (classpath là folder /resources)
   configuration:
-    map-underscore-to-camel-case: true
-    default-fetch-size: 100
-    default-statement-timeout: 30
+    map-underscore-to-camel-case: true  # Tự động ánh xạ cột snake_case (customer_id) → camelCase (customerId)
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl  # Log SQL trực tiếp ra console (System.out)
+    default-fetch-size: 100  # Kích thước fetch mặc định cho SELECT (có thể giữ nguyên)
+    default-statement-timeout: 30  # Timeout cho mỗi statement (tính bằng giây)
+
+logging:
+  level:
+    root: INFO  # Mức log chung cho toàn bộ app
+    com.stonehnh: DEBUG  # Log chi tiết hơn cho code thuộc package com.stonehnh (service/controller)
+    org.mybatis: DEBUG  # Log chi tiết cho các hoạt động của MyBatis (Mapper, SQL, transaction)
+
+#Swagger Spring API docx
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    display-request-duration: true
