@@ -75,6 +75,12 @@ public interface HomestayRulesMapper {
     @Delete("DELETE FROM homestay_rules WHERE homestay_id = #{homestayId}")
     int deleteRulesByHomestayId(@Param("homestayId") String homestayId);
 
+    /**
+     * Kiểm tra xem có tồn tại quy định (rule) trong bảng HomestayRules với id được cung cấp hay không.
+     *
+     * @param id ID của quy định cần kiểm tra.
+     * @return true nếu tồn tại quy định với id tương ứng, ngược lại trả về false.
+     */
     @Select("SELECT COUNT(*) > 0 FROM HomestayRules WHERE id = #{id}")
     boolean existsRuleById(int id);
 }
