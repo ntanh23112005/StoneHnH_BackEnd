@@ -26,7 +26,7 @@ logging:
     com.stonehnh: DEBUG  # Log chi tiết hơn cho code thuộc package com.stonehnh (service/controller)
     org.mybatis: DEBUG  # Log chi tiết cho các hoạt động của MyBatis (Mapper, SQL, transaction)
 
-#Swagger Spring API docx
+#Swagger Spring API docx test
 springdoc:
   api-docs:
     enabled: true
