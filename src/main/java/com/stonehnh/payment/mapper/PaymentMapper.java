@@ -80,6 +80,13 @@ public interface PaymentMapper {
     @Delete("DELETE FROM payments WHERE booking_id = #{bookingId}")
     int deletePaymentsByBookingId(@Param("bookingId") String bookingId);
 
+    /**
+     * Kiểm tra xem một payment (thanh toán) có tồn tại trong cơ sở dữ liệu hay không
+     * dựa trên paymentId được truyền vào.
+     *
+     * @param paymentId ID của payment cần kiểm tra.
+     * @return true nếu payment tồn tại, ngược lại trả về false.
+     */
     @Select("SELECT COUNT(1) FROM Payment WHERE paymentId = #{paymentId}")
     boolean isExistedPaymentById(@Param("paymentId") String paymentId);
 }

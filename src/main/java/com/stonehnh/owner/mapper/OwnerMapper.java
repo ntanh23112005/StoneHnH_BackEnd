@@ -83,6 +83,12 @@ public interface OwnerMapper {
     @Delete("DELETE FROM owners WHERE homestay_id = #{homestayId}")
     int deleteOwnersByHomestayId(@Param("homestayId") String homestayId);
 
+    /**
+     * Kiểm tra xem có tồn tại Owner nào trong bảng Owner với customerId được cung cấp hay không.
+     *
+     * @param customerId Mã khách hàng cần kiểm tra sự tồn tại trong bảng Owner.
+     * @return true nếu tồn tại ít nhất một bản ghi Owner với customerId tương ứng, ngược lại trả về false.
+     */
     @Select("SELECT CASE WHEN COUNT(*) > 0 THEN TRUE ELSE FALSE END FROM Owner WHERE customerId = #{customerId}")
     boolean existsOwner(@Param("customerId") String customerId);
 

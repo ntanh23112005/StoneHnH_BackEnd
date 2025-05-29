@@ -76,6 +76,12 @@ public interface HomestayImagesMapper {
     @Delete("DELETE FROM homestay_images WHERE homestay_id = #{homestayId}")
     int deleteImagesByHomestayId(@Param("homestayId") String homestayId);
 
+    /**
+     * Kiểm tra xem có tồn tại hình ảnh trong bảng HomestayImages với id được cung cấp hay không.
+     *
+     * @param id ID của hình ảnh cần kiểm tra.
+     * @return true nếu tồn tại hình ảnh với id tương ứng, ngược lại trả về false.
+     */
     @Select("SELECT COUNT(*) > 0 FROM HomestayImages WHERE id = #{id}")
     boolean existsImageById(int id);
 }
