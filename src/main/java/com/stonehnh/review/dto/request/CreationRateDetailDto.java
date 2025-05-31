@@ -1,15 +1,13 @@
-package com.stonehnh.review.dto.response;
+package com.stonehnh.review.dto.request;
+
+import lombok.Getter;
+import lombok.Setter;
 
 import java.sql.Date;
 
-import lombok.*;
-
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class RateResponseDto {
+public class CreationRateDetailDto {
     private String rateId;
     private String homestayId;
     private String customerId;
