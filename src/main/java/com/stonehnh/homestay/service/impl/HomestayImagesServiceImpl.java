@@ -55,4 +55,9 @@ public class HomestayImagesServiceImpl implements HomestayImageService {
 
         return homestayImagesMapper.deleteImageById(id);
     }
+
+    @Override
+    public HomestayImagesResponseDto findImageById(int id) {
+        return null;
+    }
 }
