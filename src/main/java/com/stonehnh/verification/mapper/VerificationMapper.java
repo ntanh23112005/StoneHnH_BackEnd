@@ -1,8 +1,9 @@
 package com.stonehnh.verification.mapper;
 import com.stonehnh.verification.entity.Verification;
 import org.apache.ibatis.annotations.*;
-
 import java.util.List;
+
+@Mapper
 public interface VerificationMapper {
     /**
      * Lấy tất cả bản ghi xác thực

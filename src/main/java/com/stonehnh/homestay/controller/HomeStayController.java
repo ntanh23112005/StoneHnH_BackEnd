@@ -3,6 +3,7 @@ package com.stonehnh.homestay.controller;
 import com.stonehnh.common.handler.ApiResponse;
 import com.stonehnh.homestay.dto.request.CreationHomestayDto;
 import com.stonehnh.homestay.service.HomestayService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -13,6 +14,11 @@ public class HomeStayController {
 
     public HomeStayController(HomestayService homestayService){this.homestayService = homestayService;}
 
+    /**
+     * API lấy hết homestay
+     *
+     * @return List HomeStay
+     * */
     @GetMapping
     public ApiResponse<Object> getAllHomestays(){
         return ApiResponse.builder()
