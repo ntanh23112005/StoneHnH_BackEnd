@@ -1,6 +1,7 @@
 package com.stonehnh.homestay.service;
 
 import com.stonehnh.homestay.dto.request.CreationHomestayDto;
+import com.stonehnh.homestay.dto.response.HomestayHomePageResponseDto;
 import com.stonehnh.homestay.dto.response.HomestayResponseDto;
 
 import java.util.List;
@@ -41,4 +42,11 @@ public interface HomestayService {
      * @return Thông tin homestay dưới dạng DTO
      */
     HomestayResponseDto findHomestayById(String homestayId);
+
+    /**
+     * Lấy danh sách homestay cho homepage
+     *
+     * @return List homestay cho homepage
+     * */
+    List<HomestayHomePageResponseDto> getHomestayHomePage();
 }

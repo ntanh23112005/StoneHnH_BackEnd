@@ -13,7 +13,7 @@ spring:
 
 mybatis:
   type-aliases-package: com.stonehnh  # Đặt alias ngắn cho entity, ví dụ: Customer thay vì com.stonehnh.customer.entity.Customer
-  mapper-locations: classpath:/static/mybatis/mapper/*.xml  # Nơi chứa các file XML mapper phức tạp (classpath là folder /resources)
+  mapper-locations: classpath:/static/mybatis/mapper/**/*.xml  # Nơi chứa các file XML mapper phức tạp (classpath là folder /resources)
   configuration:
     map-underscore-to-camel-case: true  # Tự động ánh xạ cột snake_case (customer_id) → camelCase (customerId)
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl  # Log SQL trực tiếp ra console (System.out)

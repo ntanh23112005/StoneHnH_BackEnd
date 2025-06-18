@@ -2,6 +2,7 @@ package com.stonehnh.homestay.service.impl;
 
 import com.stonehnh.homestay.converter.HomestayConverter;
 import com.stonehnh.homestay.dto.request.CreationHomestayDto;
+import com.stonehnh.homestay.dto.response.HomestayHomePageResponseDto;
 import com.stonehnh.homestay.dto.response.HomestayResponseDto;
 import com.stonehnh.homestay.entity.Homestay;
 import com.stonehnh.common.enums.ErrorCode;
@@ -35,6 +36,11 @@ public class HomestayServiceImpl implements HomestayService {
             throw new AppException(ErrorCode.HOMESTAY_NOT_FOUND);
         }
         return HomestayConverter.toDto(homestay);
+    }
+
+    @Override
+    public List<HomestayHomePageResponseDto> getHomestayHomePage() {
+        return homestayMapper.selectHomestayHomePage();
     }
 
     @Override

@@ -19,14 +19,14 @@ public class HomeStayController {
      *
      * @return List HomeStay
      * */
-    @GetMapping
-    public ApiResponse<Object> getAllHomestays(){
-        return ApiResponse.builder()
-                .success(true)
-                .message("Lấy danh sách homestay thành công")
-                .data(homestayService.getAllHomestays())
-                .build();
-    }
+//    @GetMapping
+//    public ApiResponse<Object> getAllHomestays(){
+//        return ApiResponse.builder()
+//                .success(true)
+//                .message("Lấy danh sách homestay thành công")
+//                .data(homestayService.getAllHomestays())
+//                .build();
+//    }
 
     @PostMapping
     public ApiResponse<Object> createNewHomeStay(CreationHomestayDto creationHomestayDto){
@@ -64,4 +64,17 @@ public class HomeStayController {
                 .build();
     }
 
+    /**
+     * API lấy hết homestay
+     *
+     * @return List HomeStay
+     * */
+    @GetMapping
+    public ApiResponse<Object> getAllHomestaysForHomePage(){
+        return ApiResponse.builder()
+                .success(true)
+                .message("Lấy danh sách homestay thành công")
+                .data(homestayService.getHomestayHomePage())
+                .build();
+    }
 }

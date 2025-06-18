@@ -1,5 +1,6 @@
 package com.stonehnh.homestay.mapper;
 
+import com.stonehnh.homestay.dto.response.HomestayHomePageResponseDto;
 import com.stonehnh.homestay.entity.Homestay;
 import org.apache.ibatis.annotations.*;
 
@@ -89,4 +90,11 @@ public interface HomestayMapper {
      */
     @Select("SELECT COUNT(*) > 0 FROM homestays WHERE homestay_id = #{homestayId}")
     boolean isExistedHomestayById(@Param("homestayId") String homestayId);
+
+    /**
+     * Lấy danh sách thuộc tính homestay cần thiết cho homepage
+     *
+     * @return List Homestay cho homepage
+     */
+    List<HomestayHomePageResponseDto> selectHomestayHomePage();
 }

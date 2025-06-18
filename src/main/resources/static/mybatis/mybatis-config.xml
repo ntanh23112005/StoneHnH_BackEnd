@@ -25,6 +25,10 @@
 
     <!-- Mappers -->
     <mappers>
+        <!-- Explicit XML mappers (if any) (Use File mapper.xml)-->
+        <mapper resource="mappers/CustomerMapper.xml"/>
+        <mapper resource="mappers/HomestayMapper.xml"/>
+
         <!-- Annotation-based mappers ( Use Annotation) -->
         <package name="com.stonehnh.customer.mapper"/>
         <package name="com.stonehnh.homestay.mapper"/>
@@ -34,9 +38,5 @@
         <package name="com.stonehnh.review.mapper"/>
         <package name="com.stonehnh.verification.mapper"/>
 
-        <!-- Explicit XML mappers (if any) (Use File mapper.xml)-->
-        <!-- Example -->
-        <!-- <mapper resource="mappers/CustomerMapper.xml"/> -->
-        <!-- <mapper resource="mappers/HomestayMapper.xml"/> -->
     </mappers>
 </configuration>

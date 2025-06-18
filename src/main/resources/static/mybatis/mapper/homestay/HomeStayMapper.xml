@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.stonehnh.homestay.mapper.HomestayMapper">
+
+    <resultMap id="HomestayHomePageMap" type="com.stonehnh.homestay.dto.response.HomestayHomePageResponseDto">
+        <id property="homestayId" column="homestay_id"/>
+        <result property="homestayName" column="homestay_name"/>
+        <result property="areaAddress" column="area_address"/>
+        <result property="dailyPrice" column="daily_price"/>
+        <result property="hourlyPrice" column="hourly_price"/>
+        <result property="type" column="type"/>
+        <result property="status" column="status"/>
+        <result property="typeStyle" column="type_style"/>
+        <result property="maxCustomer" column="max_customer"/>
+        <result property="numberOfBeds" column="number_of_beds"/>
+        <result property="numberOfBathrooms" column="number_of_bathrooms"/>
+        <result property="supportEquipments" column="support_equipments"/>
+        <result property="averageRate" column="average_rate"/>
+        <result property="imageList" column="image_list"/>
+    </resultMap>
+
+    <select id="selectHomestayHomePage" resultMap="HomestayHomePageMap">
+        SELECT
+            h.homestay_id,
+            h.homestay_name,
+            h.area_address,
+            h.daily_price,
+            h.hourly_price,
+            h.type,
+            h.status,
+            h.type_style,
+            h.max_customer,
+            h.number_of_beds,
+            h.number_of_bathrooms,
+            h.support_equipments,
+
+            -- Điểm đánh giá trung bình
+            (SELECT AVG(r.average_rate)
+             FROM rates r
+             WHERE r.homestay_id = h.homestay_id) AS average_rate,
+
+            -- Lấy danh sách ảnh đã lưu sẵn dưới dạng chuỗi
+            (SELECT hi.homestay_image
+             FROM homestay_images hi
+             WHERE hi.homestay_id = h.homestay_id
+             AND hi.image_for = 'represent') AS image_list
+
+        FROM homestays h
+    </select>
+
+</mapper>
