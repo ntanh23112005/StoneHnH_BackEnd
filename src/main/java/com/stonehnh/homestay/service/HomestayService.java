@@ -1,10 +1,13 @@
 package com.stonehnh.homestay.service;
 
+import com.stonehnh.common.dto.PageDTO;
 import com.stonehnh.homestay.dto.request.CreationHomestayDto;
+import com.stonehnh.homestay.dto.response.HomestayDetailResponseDto;
 import com.stonehnh.homestay.dto.response.HomestayHomePageResponseDto;
 import com.stonehnh.homestay.dto.response.HomestayResponseDto;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface HomestayService {
 
@@ -48,5 +51,12 @@ public interface HomestayService {
      *
      * @return List homestay cho homepage
      * */
-    List<HomestayHomePageResponseDto> getHomestayHomePage();
+    PageDTO<HomestayHomePageResponseDto> getHomestayHomePage(String category, int page, int size);
+
+    /**
+     * Lấy homestay cho detail Page
+     *
+     * @return homestay cho detail Page
+     * */
+    HomestayDetailResponseDto getHomestayDetail(String homestayId);
 }
