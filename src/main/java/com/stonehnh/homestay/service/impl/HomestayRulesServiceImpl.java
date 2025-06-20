@@ -22,9 +22,9 @@ import java.util.List;
         }
 
         @Override
-        public List<HomestayRulesResponseDto> getRulesByHomestayId(String homestayId) {
-            List<HomestayRule> rules = homestayRulesMapper.findRulesByHomestayId(homestayId);
-            return HomestayRulesConverter.toDtoList(rules);
+        public HomestayRulesResponseDto getRulesByHomestayId(String homestayId) {
+            HomestayRule homestayRule = homestayRulesMapper.findRulesByHomestayId(homestayId);
+            return HomestayRulesConverter.toDto(homestayRule);
         }
 
         @Override
