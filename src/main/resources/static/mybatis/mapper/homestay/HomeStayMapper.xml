@@ -5,6 +5,7 @@
 
 <mapper namespace="com.stonehnh.homestay.mapper.HomestayMapper">
 
+<!--    Get for homepage-->
     <resultMap id="HomestayHomePageMap" type="com.stonehnh.homestay.dto.response.HomestayHomePageResponseDto">
         <id property="homestayId" column="homestay_id"/>
         <result property="homestayName" column="homestay_name"/>
@@ -21,7 +22,6 @@
         <result property="averageRate" column="average_rate"/>
         <result property="imageList" column="image_list"/>
     </resultMap>
-
     <select id="selectHomestayHomePage" resultMap="HomestayHomePageMap">
         SELECT
             h.homestay_id,
@@ -49,6 +49,23 @@
              AND hi.image_for = 'represent') AS image_list
 
         FROM homestays h
+
+        <where>
+            <if test="category != null and category != ''">
+                h.type = #{category}
+            </if>
+        </where>
+
+            LIMIT #{limit} OFFSET #{offset}
     </select>
 
+    <select id="countHomestayHomePage" resultType="int">
+        SELECT COUNT(h.homestay_id)
+        FROM homestays h
+        <where>
+            <if test="category != null and category != ''">
+                h.type = #{category}
+            </if>
+        </where>
+    </select>
 </mapper>
