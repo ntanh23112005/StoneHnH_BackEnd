@@ -24,7 +24,7 @@ public interface OwnerService {
      * @param homestayId ID của homestay
      * @return Danh sách OwnerDto
      */
-    List<OwnerResponseDto> getOwnersByHomestayId(String homestayId);
+    OwnerResponseDto getOwnersByHomestayId(String homestayId);
 
     /**
      * Thêm mới thông tin sở hữu
