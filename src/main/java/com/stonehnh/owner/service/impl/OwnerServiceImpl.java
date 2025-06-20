@@ -22,9 +22,9 @@ public class OwnerServiceImpl implements OwnerService {
     }
 
     @Override
-    public List<OwnerResponseDto> getOwnersByHomestayId(String homestayId) {
-        List<Owner> owners = ownerMapper.findOwnersByHomestayId(homestayId);
-        return OwnerConverter.toDtoList(owners);
+    public OwnerResponseDto getOwnersByHomestayId(String homestayId) {
+        Owner owners = ownerMapper.findOwnersByHomestayId(homestayId);
+        return OwnerConverter.toDto(owners);
     }
 
     @Override
