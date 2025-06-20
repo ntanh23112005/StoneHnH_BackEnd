@@ -11,7 +11,7 @@ public interface RateMapper {
      * @return Danh sách tất cả đánh giá
      */
     @Select("SELECT rate_id, homestay_id, customer_id, comments, rated_time, price, location, communication, " +
-            "exactly, cleanliness_level, average_rate, rate_title FROM rate")
+            "exactly, cleanliness_level, average_rate, rate_title FROM rates")
     List<Rate> findAllRates();
 
     /**
@@ -20,7 +20,7 @@ public interface RateMapper {
      * @param rate: Đối tượng Rate cần thêm
      * @return Số dòng bị ảnh hưởng
      */
-    @Insert("INSERT INTO rate (rate_id, homestay_id, customer_id, comments, rated_time, price, location, " +
+    @Insert("INSERT INTO rates (rate_id, homestay_id, customer_id, comments, rated_time, price, location, " +
             "communication, exactly, cleanliness_level, average_rate, rate_title) " +
             "VALUES (#{rate.rateId}, #{rate.homestayId}, #{rate.customerId}, #{rate.comments}, #{rate.ratedTime}, " +
             "#{rate.price}, #{rate.location}, #{rate.communication}, #{rate.exactly}, #{rate.cleanlinessLevel}, " +
@@ -33,7 +33,7 @@ public interface RateMapper {
      * @param rate: Lấy entity đã có theo ID
      * @return Số dòng bị ảnh hưởng
      */
-    @Update("UPDATE rate SET homestay_id = #{rate.homestayId}, customer_id = #{rate.customerId}, " +
+    @Update("UPDATE rates SET homestay_id = #{rate.homestayId}, customer_id = #{rate.customerId}, " +
             "comments = #{rate.comments}, rated_time = #{rate.ratedTime}, price = #{rate.price}, " +
             "location = #{rate.location}, communication = #{rate.communication}, exactly = #{rate.exactly}, " +
             "cleanliness_level = #{rate.cleanlinessLevel}, average_rate = #{rate.averageRate}, " +
@@ -46,7 +46,7 @@ public interface RateMapper {
      * @param rateId: Mã ID của đánh giá cần xoá
      * @return Số dòng bị ảnh hưởng
      */
-    @Delete("DELETE FROM rate WHERE rate_id = #{rateId}")
+    @Delete("DELETE FROM rates WHERE rate_id = #{rateId}")
     int deleteRate(@Param("rateId") String rateId);
 
     /**
@@ -56,7 +56,7 @@ public interface RateMapper {
      * @return Thông tin đánh giá nếu tồn tại, ngược lại trả về null
      */
     @Select("SELECT rate_id, homestay_id, customer_id, comments, rated_time, price, location, communication, " +
-            "exactly, cleanliness_level, average_rate, rate_title FROM rate WHERE rate_id = #{rateId}")
+            "exactly, cleanliness_level, average_rate, rate_title FROM rates WHERE rate_id = #{rateId}")
     Rate findRateById(@Param("rateId") String rateId);
 
     /**
@@ -65,6 +65,16 @@ public interface RateMapper {
      * @param rateId Mã đánh giá cần kiểm tra
      * @return true nếu tồn tại, false nếu không
      */
-    @Select("SELECT COUNT(*) > 0 FROM rate WHERE rate_id = #{rateId}")
+    @Select("SELECT COUNT(*) > 0 FROM rates WHERE rate_id = #{rateId}")
     boolean isExistedRateById(@Param("rateId") String rateId);
+
+    /**
+     * Lấy thông tin đánh giá theo ID
+     *
+     * @param homestayId Mã đánh giá cần tìm
+     * @return Thông tin đánh giá nếu tồn tại, ngược lại trả về null
+     */
+    @Select("SELECT rate_id, homestay_id, customer_id, comments, rated_time, price, location, communication, " +
+            "exactly, cleanliness_level, average_rate, rate_title FROM rates WHERE homestay_id = #{homestayId}")
+    List<Rate> findRateByHomestayId(@Param("homestayId") String homestayId);
 }
