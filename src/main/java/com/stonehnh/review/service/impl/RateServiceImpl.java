@@ -60,4 +60,13 @@ public class RateServiceImpl implements RateService {
         }
         return RateConverter.toDto(rate);
     }
+
+    @Override
+    public List<RateResponseDto> findRateByHomestayId(String homestayId) {
+        List<Rate> rateList = rateMapper.findRateByHomestayId(homestayId);
+        if (rateList == null) {
+            throw new AppException(ErrorCode.RATE_NOT_FOUND);
+        }
+        return RateConverter.toDtoList(rateList);
+    }
 }
