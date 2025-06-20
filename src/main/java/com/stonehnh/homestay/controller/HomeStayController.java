@@ -1,10 +1,14 @@
 package com.stonehnh.homestay.controller;
 
+import com.stonehnh.common.dto.PageDTO;
 import com.stonehnh.common.handler.ApiResponse;
 import com.stonehnh.homestay.dto.request.CreationHomestayDto;
+import com.stonehnh.homestay.dto.response.HomestayHomePageResponseDto;
 import com.stonehnh.homestay.service.HomestayService;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/homestay")
@@ -55,26 +59,34 @@ public class HomeStayController {
                 .build();
     }
 
-    @GetMapping("/{id}")
-    public ApiResponse<Object> getHomestayById(@PathVariable("id") String homestayId){
+    @GetMapping("/{homestayId}")
+    public ApiResponse<Object> getHomestayById(@PathVariable String homestayId){
         return ApiResponse.builder()
                 .success(true)
                 .message("Get homestay theo id thành công")
-                .data(homestayService.findHomestayById(homestayId))
+                .data(homestayService.getHomestayDetail(homestayId))
                 .build();
     }
 
     /**
-     * API lấy hết homestay
+     * API lấy danh sách homestay cho home page có phân trang
      *
-     * @return List HomeStay
-     * */
+     * @param page trang hiện tại (mặc định là 1)
+     * @param size số lượng homestay mỗi trang (cố định là 8)
+     * @return List Homestay + pagination metadata
+     */
     @GetMapping
-    public ApiResponse<Object> getAllHomestaysForHomePage(){
+    public ApiResponse<Object> getAllHomestaysForHomePage(
+            @RequestParam String category,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "8") int size) {
+
+        PageDTO<HomestayHomePageResponseDto> result = homestayService.getHomestayHomePage(category, page, size);
+
         return ApiResponse.builder()
                 .success(true)
                 .message("Lấy danh sách homestay thành công")
-                .data(homestayService.getHomestayHomePage())
+                .data(result)
                 .build();
     }
 }
