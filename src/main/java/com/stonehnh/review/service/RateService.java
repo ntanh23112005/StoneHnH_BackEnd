@@ -41,4 +41,11 @@ public interface RateService {
      * @return RateResponseDto nếu tìm thấy, null nếu không
      */
     RateResponseDto findRateById(String rateId);
+
+    /**
+     * Tìm List Rate theo homestayId
+     * @param homestayId mã Rate cần tìm
+     * @return List RateResponseDto nếu tìm thấy, null nếu không
+     */
+    List<RateResponseDto> findRateByHomestayId(String homestayId);
 }
