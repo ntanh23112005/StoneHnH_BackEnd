@@ -59,4 +59,13 @@ public class ReviewServiceImpl implements ReviewService {
         }
         return ReviewConverter.toDto(review);
     }
+
+    @Override
+    public List<ReviewResponeDto> findReviewsByHomestayId(String homestayId) {
+        List<Reviews> reviewList = reviewMapper.findReviewsByHomestayId(homestayId);
+        if (reviewList == null) {
+            throw new AppException(ErrorCode.REVIEW_NOT_FOUND);
+        }
+        return ReviewConverter.toDtoList(reviewList);
+    }
 }
