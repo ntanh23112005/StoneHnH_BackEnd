@@ -5,6 +5,7 @@ import com.stonehnh.homestay.entity.Homestay;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Mapper
 public interface HomestayMapper {
@@ -92,9 +93,19 @@ public interface HomestayMapper {
     boolean isExistedHomestayById(@Param("homestayId") String homestayId);
 
     /**
-     * Lấy danh sách thuộc tính homestay cần thiết cho homepage
+     * Lấy danh sách thuộc tính homestay cần thiết cho homepage ( Phân trang)
      *
      * @return List Homestay cho homepage
      */
-    List<HomestayHomePageResponseDto> selectHomestayHomePage();
+    List<HomestayHomePageResponseDto> selectHomestayHomePage(@Param("category") String category,
+                                                             @Param("limit") int limit,
+                                                             @Param("offset") int offset);
+
+    /**
+     * Đếm số lượng Homestay
+     *
+     * @return Số lượng homestay
+     * */
+    int countHomestayHomePage(@Param("category") String category);
+
 }
