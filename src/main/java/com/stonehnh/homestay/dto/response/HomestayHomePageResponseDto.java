@@ -26,6 +26,9 @@ public class HomestayHomePageResponseDto {
     private int numberOfBathrooms;
     private String supportEquipments;
 
+    // rates
     private Float averageRate;
+
+    //home_img
     private String imageList; // VD: "hinh1.jpg,hinh2.jpg,hinh3.jpg"
 }
