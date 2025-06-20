@@ -31,7 +31,7 @@ public interface HomestayRulesMapper {
      * @return Danh sách các đối tượng HomestayRule.
      */
     @Select("SELECT id, homestay_id, rule_text, policy_text, created_at FROM homestay_rules WHERE homestay_id = #{homestayId}")
-    List<HomestayRule> findRulesByHomestayId(@Param("homestayId") String homestayId);
+    HomestayRule findRulesByHomestayId(@Param("homestayId") String homestayId);
 
     /**
      * Thêm mới một nội quy cho homestay.
