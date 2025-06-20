@@ -17,7 +17,7 @@ public interface HomestayRulesService {
      * @param homestayId ID của homestay
      * @return Danh sách HomestayRuleDto
      */
-    List<HomestayRulesResponseDto> getRulesByHomestayId(String homestayId);
+    HomestayRulesResponseDto getRulesByHomestayId(String homestayId);
 
     /**
      * Thêm mới nội quy cho homestay
