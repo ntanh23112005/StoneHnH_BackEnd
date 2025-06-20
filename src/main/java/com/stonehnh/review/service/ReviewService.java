@@ -41,4 +41,11 @@ public interface ReviewService {
      * @return ReviewResponeDto nếu tìm thấy, null nếu không
      */
     ReviewResponeDto findReviewById(int reviewId);
+
+    /**
+     * Tìm 1 Review theo homestayId
+     * @param homestayId mã Review cần tìm
+     * @return List ReviewResponeDto nếu tìm thấy, null nếu không
+     */
+    List<ReviewResponeDto> findReviewsByHomestayId(String homestayId);
 }
