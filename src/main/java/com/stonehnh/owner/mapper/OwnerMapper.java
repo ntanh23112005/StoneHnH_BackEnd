@@ -31,7 +31,7 @@ public interface OwnerMapper {
      * @return Danh sách các đối tượng Owner.
      */
     @Select("SELECT customer_id, homestay_id, percentage_own FROM owners WHERE homestay_id = #{homestayId}")
-    List<Owner> findOwnersByHomestayId(@Param("homestayId") String homestayId);
+    Owner findOwnersByHomestayId(@Param("homestayId") String homestayId);
 
     /**
      * Lấy thông tin sở hữu cụ thể theo mã khách hàng và homestay.
