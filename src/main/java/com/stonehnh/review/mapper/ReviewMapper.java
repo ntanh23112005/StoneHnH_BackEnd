@@ -60,4 +60,15 @@ public interface ReviewMapper {
      */
     @Select("SELECT COUNT(*) > 0 FROM reviews WHERE review_id = #{reviewId}")
     boolean isExistedReviewById(@Param("reviewId") int reviewId);
+
+    /**
+     * Lấy danh sách tất cả reviews trong bảng reviews theo homestayId
+     *
+     * @param homestayId mã id của homestay
+     * @return Danh sách thông tin của tất cả reviews theo homestay
+     */
+    @Select("SELECT review_id, customer_id, homestay_id, review_comments, rate_customer, created_time " +
+            "FROM reviews " +
+            "WHERE homestay_id = #{homestayId}")
+    List<Reviews> findReviewsByHomestayId(@Param("homestayId") String homestayId);
 }
