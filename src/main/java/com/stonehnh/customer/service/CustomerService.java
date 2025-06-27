@@ -15,26 +15,54 @@ public interface CustomerService {
     List<CustomerResponseDto> getAllCustomers();
 
     /**
-     * Tạo mới 1 Customer
-     * @return Số dòng bị ảnh hưởng
+     * Tạo mới 1 Customer + role
+     * @param creationCustomerDto dto tạo mới
+     * @param roleId role muốn truyền
+     * @return dto CustomerResponse mới thêm
      */
-    int createNewCustomer(CreationCustomerDto creationCustomerDto);
+    CustomerResponseDto createNewCustomerWithRole(CreationCustomerDto creationCustomerDto, List<String> roleId);
+
 
     /**
      * Cập nhật 1 Customer
+     * @param customerId Customer Id
+     * @param customer 1 đối tượng Customer
      * @return Số dòng bị ảnh hưởng
      */
     int updateCustomer(String customerId, Customer customer);
 
     /**
      * Xóa 1 Customer
+     * @param customerId Customer Id
      * @return Số dòng bị ảnh hưởng
      */
     int deleteCustomerId(String customerId);
 
     /**
      * Tìm 1 customer theo Customer Id
+     * @param customerId Customer Id
      * @return 1 customer theo id đã tìm
      */
     CustomerResponseDto findCustomerByCustomerId (String customerId);
+
+    /**
+     * Tìm 1 customer theo email
+     * @param email Customer's email
+     * @return 1 customer theo email
+     */
+    CustomerResponseDto findCustomerByEmail (String email);
+
+    /**
+     * Tìm 1 customer theo email
+     * @param email Customer's email
+     * @return 1 customer theo email
+     */
+    boolean checkLoginByEmailAndPassword (String email, String password);
+
+    /**
+     * Lấy role theo email
+     * @param email Customer's email
+     * @return Role (hoặc List nếu nhiều) theo email
+     */
+    List<String> getRolesByEmail(String email);
 }

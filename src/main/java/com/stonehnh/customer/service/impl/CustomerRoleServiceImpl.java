@@ -9,10 +9,13 @@ import com.stonehnh.common.enums.ErrorCode;
 import com.stonehnh.common.exception.AppException;
 import com.stonehnh.customer.mapper.CustomerRoleMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@Transactional
 public class CustomerRoleServiceImpl implements CustomerRoleService {
 
     private final CustomerRoleMapper customerRoleMapper;
@@ -30,6 +33,7 @@ public class CustomerRoleServiceImpl implements CustomerRoleService {
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public int createNewCustomerRole(CreationCustomerRoleDto customerRoleDto) {
         /*
          * TODO: Xử lý logic riêng (nếu có)

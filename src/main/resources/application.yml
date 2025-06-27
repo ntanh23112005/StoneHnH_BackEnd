@@ -1,6 +1,9 @@
 server:
   port: 8080  # Cổng server Spring Boot chạy local (http://localhost:8080)
 
+jwt:
+  secret: ZGl5TWNSaGdGTm1VbG9YTk9Lc1U3Y1FVNWVXY2hLT0E0NHRlRUR5bTZ0ZzN3RA==
+
 spring:
   application:
     name: stonehnh-backend  # Tên app hiển thị trong logs hoặc actuator
@@ -35,3 +38,15 @@ springdoc:
     enabled: true
     path: /swagger-ui.html
     display-request-duration: true
+
+security:
+  oauth2:
+    client:
+      registration:
+        google:
+          client-id: "xxxxxxxxxxxx.apps.googleusercontent.com"
+          client-secret: "xxxxxxxxxxxxxxxxxxxx"
+          scope:
+            - openid
+            - profile
+            - email

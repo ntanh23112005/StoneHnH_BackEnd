@@ -1,5 +1,6 @@
 package com.stonehnh.customer.mapper;
 
+import com.stonehnh.customer.dto.response.CustomerResponseDto;
 import com.stonehnh.customer.entity.Customer;
 import org.apache.ibatis.annotations.*;
 
@@ -66,7 +67,13 @@ public interface CustomerMapper {
      * @param customerId Mã customer cần kiểm tra
      * @return true nếu tồn tại, false nếu không
      */
-    @Select("SELECT COUNT(*) > 0 FROM customers WHERE customer_id = #{customerId}")
+    @Select("SELECT COUNT(c.customer_id) > 0 FROM customers c WHERE c.customer_id = #{customerId}")
     boolean isExistedCustomerById(@Param("customerId") String customerId);
 
+    @Select("SELECT COUNT(c.customer_id) FROM customers c WHERE c.email = #{email} AND c.password = #{password}")
+    boolean checkLoginByEmailAndPassWord(@Param("email") String email, @Param("password") String password);
+
+    CustomerResponseDto findCustomerByEmail(@Param("email") String email);
+
+    List<String> getRolesByEmail(@Param("email") String email);
 }

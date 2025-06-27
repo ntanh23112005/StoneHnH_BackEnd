@@ -53,6 +53,20 @@ public class CustomerConverter {
                 .accountStatus(customer.getAccountStatus())
                 .build();
     }
+    public static CustomerResponseDto toDto(Customer customer, List<String> roles) {
+        return CustomerResponseDto.builder()
+                .customerId(customer.getCustomerId())
+                .customerName(customer.getCustomerName())
+                .email(customer.getEmail())
+                .phoneNumber(customer.getPhoneNumber())
+                .customerAddress(customer.getCustomerAddress())
+                .createdDate(customer.getCreatedDate())
+                .customerPicture(customer.getCustomerPicture())
+                .verifyStatus(customer.getVerifyStatus())
+                .accountStatus(customer.getAccountStatus())
+                .roleName(roles) // gán roles
+                .build();
+    }
 
 
     /**
@@ -61,6 +75,27 @@ public class CustomerConverter {
      * @return 1 customer đã được convert từ dto -> entity
      */
     public static Customer toEntity(CreationCustomerDto customerDto) {
+        Customer customer = new Customer();
+        customer.setCustomerId(customerDto.getCustomerId());
+        customer.setCustomerName(customerDto.getCustomerName());
+        customer.setEmail(customerDto.getEmail());
+        customer.setPhoneNumber(customerDto.getPhoneNumber());
+        customer.setPassword(customerDto.getPassword());
+        customer.setCustomerAddress(customerDto.getCustomerAddress());
+        customer.setCreatedDate(customerDto.getCreatedDate());
+        customer.setCustomerPicture(customerDto.getCustomerPicture());
+        customer.setVerifyStatus(customerDto.getVerifyStatus());
+        customer.setAccountStatus(customerDto.getAccountStatus());
+
+        return customer;
+    }
+
+    /**
+     * Hàm convert data từ frontend xuống entity backend để làm việc với database
+     *
+     * @return 1 customer đã được convert từ dto -> entity
+     */
+    public static Customer dtoToEntity(CustomerResponseDto customerDto) {
         Customer customer = new Customer();
         customer.setCustomerId(customerDto.getCustomerId());
         customer.setCustomerName(customerDto.getCustomerName());

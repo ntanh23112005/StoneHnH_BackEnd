@@ -3,7 +3,7 @@ package com.stonehnh.customer.dto.request;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.sql.Date;
+import java.util.Date;
 
 @Getter
 @Setter

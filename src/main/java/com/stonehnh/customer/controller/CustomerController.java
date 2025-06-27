@@ -1,11 +1,15 @@
 package com.stonehnh.customer.controller;
 
 import com.stonehnh.customer.dto.request.CreationCustomerDto;
+import com.stonehnh.customer.dto.request.CreationCustomerWithRoles;
+import com.stonehnh.customer.dto.response.CustomerResponseDto;
 import com.stonehnh.customer.entity.Customer;
 import com.stonehnh.common.handler.ApiResponse;
 import com.stonehnh.customer.service.CustomerService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/customers")
@@ -29,11 +33,22 @@ public class CustomerController {
      * Thêm customer mới
      */
     @PostMapping
-    public ApiResponse<Object> createNewCustomer(@RequestBody CreationCustomerDto creationCustomerDto) {
+    public ApiResponse<Object> createNewCustomer(@RequestBody CreationCustomerWithRoles request) {
+        CreationCustomerDto dto = request.getCreationCustomer();
+        List<String> roleIds = request.getRoleIds();
+
+        if (roleIds == null || roleIds.isEmpty()) {
+            // Nếu không chọn quyền thì default quyền user
+            roleIds = List.of("R01");
+        }
+
+        // Gọi service xử lý
+        CustomerResponseDto createdCustomer = customerService.createNewCustomerWithRole(dto, roleIds);
+
         return ApiResponse.builder()
                 .success(true)
-                .message("Success")
-                .data(customerService.createNewCustomer(creationCustomerDto))
+                .message("Tạo khách hàng thành công")
+                .data(createdCustomer)
                 .build();
     }
 

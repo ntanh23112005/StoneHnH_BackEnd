@@ -47,7 +47,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public int updateBooking(String bookingId, Booking booking) {
+    public int updateBooking(String bookingId, CreationBookingDto creationBookingDto) {
         /*
          * TODO: Xử lý logic nếu có
          * */
@@ -57,7 +57,7 @@ public class BookingServiceImpl implements BookingService {
             // TODO: Xử lý theo nghiệp vụ
             throw new AppException(ErrorCode.BOOKING_NOT_FOUND);
         }
-        return bookingMapper.updateBooking(booking);
+        return bookingMapper.updateBooking(BookingConverter.toEntity(creationBookingDto));
     }
 
     @Override

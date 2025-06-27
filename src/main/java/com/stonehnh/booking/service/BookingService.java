@@ -27,7 +27,7 @@ public interface BookingService {
      * Cập nhật 1 Booking
      * @return Số dòng bị ảnh hưởng
      */
-    int updateBooking(String bookingId, Booking booking);
+    int updateBooking(String bookingId, CreationBookingDto creationBookingDto);
 
     /**
      * Xóa 1 Booking
