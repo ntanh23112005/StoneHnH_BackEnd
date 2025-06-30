@@ -33,7 +33,10 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         List<String> whiteList = List.of(
                 "/api/v1/auth/**",
-                "/api/v1/homestay/**"
+                "/api/v1/homestay/**",
+                "/api/v1/customers/register",
+                "/api/v1/customers/send-verification-code",
+                "/api/v1/customers/verify-code"
         );
 
         for (String pattern : whiteList) {

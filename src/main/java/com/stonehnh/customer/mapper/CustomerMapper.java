@@ -76,4 +76,13 @@ public interface CustomerMapper {
     CustomerResponseDto findCustomerByEmail(@Param("email") String email);
 
     List<String> getRolesByEmail(@Param("email") String email);
+
+    /**
+     * Cập nhật mật khẩu theo email
+     * @param email email của khách hàng
+     * @param encodedPassword mật khẩu đã mã hóa
+     * @return số dòng bị ảnh hưởng
+     */
+    @Update("UPDATE customers SET password = #{encodedPassword} WHERE email = #{email}")
+    int updatePasswordByEmail(@Param("email") String email, @Param("encodedPassword") String encodedPassword);
 }

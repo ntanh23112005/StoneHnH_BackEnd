@@ -26,6 +26,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/auth/**").permitAll()
                         .requestMatchers("/api/v1/homestay/**").permitAll()
+                        .requestMatchers("/api/v1/customers/register").permitAll()
+                        .requestMatchers("/api/v1/customers/send-verification-code").permitAll()
+                        .requestMatchers("/api/v1/customers/verify-code").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
