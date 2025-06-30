@@ -65,4 +65,18 @@ public interface CustomerService {
      * @return Role (hoặc List nếu nhiều) theo email
      */
     List<String> getRolesByEmail(String email);
+
+    /**
+     * Gửi mã xác thực về email và trả về mã
+     * @param email địa chỉ email
+     * @return mã xác thực 6 chữ số
+     */
+    String sendVerificationCodeToEmail(String email);
+
+    /**
+     * Đặt lại mật khẩu mới cho email đã xác thực
+     * @param email Email của khách hàng
+     * @param newPassword Mật khẩu mới (chưa mã hóa)
+     */
+    void resetPassword(String email, String newPassword);
 }
