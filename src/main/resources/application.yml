@@ -14,6 +14,18 @@ spring:
     password: 123456  # Mật khẩu DB
     driver-class-name: com.mysql.cj.jdbc.Driver  # Driver MySQL 8.x
 
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: supporrtstonehnh@gmail.com
+    password: kywt vofy epme uhlo
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
 mybatis:
   type-aliases-package: com.stonehnh  # Đặt alias ngắn cho entity, ví dụ: Customer thay vì com.stonehnh.customer.entity.Customer
   mapper-locations: classpath:/static/mybatis/mapper/**/*.xml  # Nơi chứa các file XML mapper phức tạp (classpath là folder /resources)
