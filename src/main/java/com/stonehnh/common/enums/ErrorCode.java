@@ -49,7 +49,23 @@ public enum ErrorCode {
     // ===== Đánh giá & nhận xét =====
     REVIEW_NOT_FOUND("6401", "Không tìm thấy đánh giá."),
     RATE_NOT_FOUND("6402", "Không tìm thấy xếp hạng."),
-    RATE_CREATE_FAILED("6101", "Tạo đánh giá thất bại.");
+    RATE_CREATE_FAILED("6101", "Tạo đánh giá thất bại."),
+
+    // ===== AUTH =====
+    INVALID_CREDENTIALS("AUTH_001", "Mật khẩu hoặc email không chính xác"),
+    INVALID_REFRESH_TOKEN("AUTH_002", "Refresh token không hợp lệ"),
+    MISSING_OR_INVALID_TOKEN("AUTH_003", "Thiếu token hoặc token sai định dạng"),
+    INVALID_TOKEN("AUTH_004", "Token không hợp lệ"),
+    MISSING_CREDENTIAL("AUTH_005", "Thiếu credential"),
+    INVALID_ID_TOKEN("AUTH_006", "ID token không hợp lệ"),
+    FAILED_TO_CREATE_ACCOUNT("AUTH_007", "Không thể tạo tài khoản mới"),
+    SERVER_ERROR("AUTH_008", "Lỗi server"),
+
+    // ===== SUCCESS MESSAGE =====
+    LOGIN_SUCCESS("AUTH_100", "Đăng nhập thành công"),
+    LOGOUT_SUCCESS("AUTH_101", "Đăng xuất thành công"),
+    GET_ACCOUNT_SUCCESS("AUTH_102", "Lấy Account theo access-token thành công"),
+    GOOGLE_LOGIN_SUCCESS("AUTH_103", "Đăng nhập Google thành công");
 
     private final String code;
     private final String message;

@@ -60,5 +60,5 @@ security:
           client-secret: "xxxxxxxxxxxxxxxxxxxx"
           scope:
             - openid
-            - profile
+            - profile6
             - email
