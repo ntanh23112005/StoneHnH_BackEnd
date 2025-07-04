@@ -36,7 +36,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 "/api/v1/homestay/**",
                 "/api/v1/customers/register",
                 "/api/v1/customers/send-verification-code",
-                "/api/v1/customers/verify-code"
+                "/api/v1/customers/verify-code",
+                "/api/v1/customers/register"
         );
 
         for (String pattern : whiteList) {

@@ -9,6 +9,7 @@ import com.stonehnh.verification.service.VerificationService;
 import com.stonehnh.common.enums.ErrorCode;
 import com.stonehnh.common.exception.AppException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -22,10 +23,15 @@ public class VerificationServiceImpl implements VerificationService {
     }
 
     @Override
+    @Transactional (readOnly = true)
     public List<VerificationResponseDto> findAll() {
-        List<Verification> entityList = verificationMapper.findAllVerifications();
-        return VerificationConterver.toDtoList(entityList);
+        try {
+            return VerificationConterver.toDtoList(verificationMapper.findAllVerifications());
+        } catch (Exception e) {
+            throw new AppException(ErrorCode.UNEXPECTED_EXCEPTION);
+        }
     }
+
 
 //    @Override
 //    public VerificationResponseDto findById(int id) {
@@ -70,5 +76,5 @@ public class VerificationServiceImpl implements VerificationService {
 //    @Override
 //    public boolean isExistById(int id) {
 //        return verificationMapper.isExistVerificationById(id);
- //   }
+    //   }
 }

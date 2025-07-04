@@ -9,8 +9,10 @@ import com.stonehnh.common.exception.AppException;
 import com.stonehnh.payment.mapper.PaymentMapper;
 import com.stonehnh.payment.service.PaymentService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -23,43 +25,55 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<PaymentResponseDto> getAllPayments() {
-        List<Payment> payments = paymentMapper.findAllPayments();
-        return PaymentConverter.toDtoList(payments);
+        try {
+            return PaymentConverter.toDtoList(paymentMapper.findAllPayments());
+        } catch (Exception e) {
+            throw new RuntimeException(ErrorCode.PAYMENT_FAILED.getMessage(), e);
+        }
     }
 
-    @Override
-    public int createPayment(CreationPaymentDto creationPaymentDto) {
-        Payment payment = PaymentConverter.toEntity(creationPaymentDto);
-        payment.setPaymentId(UUID.randomUUID().toString());
-        return paymentMapper.insertPayment(payment);
-    }
 
     @Override
-    public int updatePayment(String paymentId, CreationPaymentDto paymentDto) {
-        boolean exists = paymentMapper.isExistedPaymentById(paymentId);
-        if (!exists) {
+    @Transactional
+    public int createPayment(CreationPaymentDto dto) {
+        try {
+            Payment payment = PaymentConverter.toEntity(dto);
+            payment.setPaymentId(UUID.randomUUID().toString());
+            return paymentMapper.insertPayment(payment);
+        } catch (Exception e) {
+            throw new RuntimeException(ErrorCode.PAYMENT_FAILED.getMessage(), e);
+        }
+    }
+
+
+    @Override
+    @Transactional
+    public int updatePayment(String paymentId, CreationPaymentDto dto) {
+        if (!paymentMapper.isExistedPaymentById(paymentId)) {
             throw new AppException(ErrorCode.PAYMENT_NOT_FOUND);
         }
-        paymentDto.setPaymentId(paymentId);
-        return paymentMapper.updatePayment(PaymentConverter.toEntity(paymentDto));
+        dto.setPaymentId(paymentId);
+        return paymentMapper.updatePayment(PaymentConverter.toEntity(dto));
     }
 
+
     @Override
+    @Transactional
     public int deletePayment(String paymentId) {
-        boolean exists = paymentMapper.isExistedPaymentById(paymentId);
-        if (!exists) {
+        if (!paymentMapper.isExistedPaymentById(paymentId)) {
             throw new AppException(ErrorCode.PAYMENT_NOT_FOUND);
         }
         return paymentMapper.deletePaymentById(paymentId);
     }
 
+
     @Override
     public PaymentResponseDto findPaymentById(String paymentId) {
-        Payment payment = paymentMapper.findPaymentById(paymentId);
-        if (payment == null) {
-            throw new AppException(ErrorCode.PAYMENT_NOT_FOUND);
-        }
-        return PaymentConverter.toDto(payment);
+        return Optional.ofNullable(paymentMapper.findPaymentById(paymentId))
+                .map(PaymentConverter::toDto)
+                .orElseThrow(() -> new AppException(ErrorCode.PAYMENT_NOT_FOUND));
     }
+
 }
