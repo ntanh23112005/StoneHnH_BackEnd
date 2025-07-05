@@ -29,7 +29,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/customers/register").permitAll()
                         .requestMatchers("/api/v1/customers/send-verification-code").permitAll()
                         .requestMatchers("/api/v1/customers/verify-code").permitAll()
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -38,8 +38,4 @@ public class SecurityConfig {
                 .build();
     }
 
-    @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 }
