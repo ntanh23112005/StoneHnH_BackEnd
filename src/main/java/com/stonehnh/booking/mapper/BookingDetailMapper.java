@@ -92,4 +92,22 @@ public interface BookingDetailMapper {
      */
     @Select("SELECT COUNT(*) > 0 FROM booking_details WHERE id = #{id}")
     boolean isExistedBookingDetailById(@Param("id") String id);
+
+    /**
+     * Lấy thông tin booking detail theo HomeStayId
+     *
+     * @param homestayId Mã homestay cần tìm
+     * @return Thông tin booking detail theo homestay nếu tồn tại, ngược lại trả về null
+     */
+    @Select("SELECT id, " +
+            "booking_id, " +
+            "homestay_id, " +
+            "booking_time, " +
+            "check_in_time, " +
+            "check_out_time, " +
+            "number_of_customers, " +
+            "number_of_pets " +
+            "FROM booking_details " +
+            "WHERE homestay_id = #{homestayId}")
+    List<BookingDetail> findBookingDetailByHomestayId(@Param("homestayId") String homestayId);
 }

@@ -33,15 +33,15 @@ public class BookingDetailController {
     }
 
     // ✅ 2. Lấy danh sách tất cả booking detail
-    @GetMapping
-    public ApiResponse<Object> getAllBookingDetails() {
-        List<BookingDetailResponseDto> list = bookingDetailService.getAllBookingDetails();
-        return ApiResponse.builder()
-                .success(true)
-                .message("Lấy danh sách chi tiết đặt phòng thành công.")
-                .data(list)
-                .build();
-    }
+//    @GetMapping
+//    public ApiResponse<Object> getAllBookingDetails() {
+//        List<BookingDetailResponseDto> list = bookingDetailService.getAllBookingDetails();
+//        return ApiResponse.builder()
+//                .success(true)
+//                .message("Lấy danh sách chi tiết đặt phòng thành công.")
+//                .data(list)
+//                .build();
+//    }
 
     // ✅ 3. Lấy một booking detail theo ID
     @GetMapping("/{id}")
@@ -73,6 +73,17 @@ public class BookingDetailController {
                 .success(true)
                 .message("Xoá chi tiết đặt phòng thành công.")
                 .data(result)
+                .build();
+    }
+
+    // Lấy danh sách tất cả booking detail theo homestayId
+    @GetMapping
+    public ApiResponse<Object> getAllBookingDetailsByHomestayId(@RequestParam String homestayId) {
+        List<BookingDetailResponseDto> list = bookingDetailService.findBookingDetailByHomestayId(homestayId);
+        return ApiResponse.builder()
+                .success(true)
+                .message("Lấy danh sách chi tiết đặt phòng theo homestay thành công.")
+                .data(list)
                 .build();
     }
 }

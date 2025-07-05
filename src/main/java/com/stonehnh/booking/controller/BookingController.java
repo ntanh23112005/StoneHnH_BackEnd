@@ -1,10 +1,11 @@
 package com.stonehnh.booking.controller;
 
-import com.stonehnh.booking.dto.request.CreationBookingDto;
+import com.stonehnh.booking.dto.request.CreationBookingWrapperDto;
 import com.stonehnh.booking.dto.response.BookingResponseDto;
 import com.stonehnh.booking.service.BookingService;
 import com.stonehnh.common.handler.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,15 +22,15 @@ public class BookingController {
     }
 
     // Tạo mới một booking
-    @PostMapping
-    public ApiResponse<Object> createBooking(@RequestBody CreationBookingDto dto) {
-        int result = bookingService.createNewBooking(dto);
-        return ApiResponse.builder()
-                .success(true)
-                .message("Tạo đơn đặt phòng thành công.")
-                .data(result)
-                .build();
-    }
+//    @PostMapping
+//    public ApiResponse<Object> createBooking(@RequestBody CreationBookingDto dto) {
+//        int result = bookingService.createNewBooking(dto);
+//        return ApiResponse.builder()
+//                .success(true)
+//                .message("Tạo đơn đặt phòng thành công.")
+//                .data(result)
+//                .build();
+//    }
 
     // Lấy danh sách tất cả booking
     @GetMapping
@@ -62,5 +63,16 @@ public class BookingController {
                 .message("Xoá đơn đặt phòng thành công.")
                 .data(null)
                 .build();
+    }
+
+    @PostMapping
+    public ResponseEntity<ApiResponse<?>> createBookingWithDetail(
+            @RequestBody CreationBookingWrapperDto request) {
+        return ResponseEntity.ok(
+                bookingService.createBookingWithDetail(
+                        request.getBooking(),
+                        request.getBookingDetail()
+                )
+        );
     }
 }
