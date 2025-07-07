@@ -10,6 +10,7 @@ import com.stonehnh.homestay.service.HomestayImageService;
 import com.stonehnh.homestay.mapper.HomestayImagesMapper;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -23,38 +24,101 @@ public class HomestayImagesServiceImpl implements HomestayImageService {
     }
 
     @Override
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
     public List<HomestayImagesResponseDto> getImagesByHomestayId(String homestayId) {
-        List<HomestayImages> images = homestayImagesMapper.findImagesByHomestayId(homestayId);
-        return HomestayImagesConverter.toDtoList(images);
+        try {
+            List<HomestayImages> images = homestayImagesMapper.findImagesByHomestayId(homestayId);
+
+            // Optional: Nếu muốn báo lỗi khi không có ảnh
+            // if (images == null || images.isEmpty()) {
+            //     throw new AppException(ErrorCode.HOMESTAY_IMAGE_NOT_FOUND);
+            // }
+
+            return HomestayImagesConverter.toDtoList(images);
+
+        } catch (AppException e) {
+            throw e;
+
+        } catch (Exception e) {
+            e.printStackTrace(); // hoặc log.error("Lỗi khi lấy ảnh homestay", e);
+            throw new AppException(ErrorCode.SYSTEM_ERROR);
+        }
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public int createImage(CreationHomestayImagesDto dto) {
-        HomestayImages entity = HomestayImagesConverter.toEntity(dto);
-        return homestayImagesMapper.insertImage(entity);
-    }
+        try {
+            HomestayImages entity = HomestayImagesConverter.toEntity(dto);
 
+            int rowsAffected = homestayImagesMapper.insertImage(entity);
+            if (rowsAffected == 0) {
+                throw new AppException(ErrorCode.HOMESTAY_IMAGE_UPLOAD_FAILED);
+            }
+
+            return rowsAffected;
+
+        } catch (AppException e) {
+            throw e;
+
+        } catch (Exception e) {
+            e.printStackTrace(); // hoặc log.error("Lỗi khi tải ảnh homestay", e);
+            throw new AppException(ErrorCode.SYSTEM_ERROR);
+        }
+    }
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public int updateImage(int id, CreationHomestayImagesDto dto) {
-        boolean exists = homestayImagesMapper.existsImageById(id);
-        if (!exists) {
-            throw new AppException(ErrorCode.HOMESTAY_IMAGE_NOT_FOUND);
-        }
+        try {
+            boolean exists = homestayImagesMapper.existsImageById(id);
+            if (!exists) {
+                throw new AppException(ErrorCode.HOMESTAY_IMAGE_NOT_FOUND);
+            }
 
-        HomestayImages entity = HomestayImagesConverter.toEntity(dto);
-        entity.setId(id);
-        return homestayImagesMapper.updateImage(entity);
+            HomestayImages entity = HomestayImagesConverter.toEntity(dto);
+            entity.setId(id);
+
+            int rowsAffected = homestayImagesMapper.updateImage(entity);
+            if (rowsAffected == 0) {
+                throw new AppException(ErrorCode.HOMESTAY_IMAGE_UPLOAD_FAILED); // Gợi ý thêm mã lỗi này
+            }
+
+            return rowsAffected;
+
+        } catch (AppException e) {
+            throw e;
+
+        } catch (Exception e) {
+            e.printStackTrace(); // hoặc dùng log.error(...) nếu có
+            throw new AppException(ErrorCode.SYSTEM_ERROR);
+        }
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public int deleteImage(int id) {
-        boolean exists = homestayImagesMapper.existsImageById(id);
-        if (!exists) {
-            throw new AppException(ErrorCode.HOMESTAY_IMAGE_NOT_FOUND);
-        }
+        try {
+            boolean exists = homestayImagesMapper.existsImageById(id);
+            if (!exists) {
+                throw new AppException(ErrorCode.HOMESTAY_IMAGE_NOT_FOUND);
+            }
 
-        return homestayImagesMapper.deleteImageById(id);
+            int rowsAffected = homestayImagesMapper.deleteImageById(id);
+            if (rowsAffected == 0) {
+                throw new AppException(ErrorCode.HOMESTAY_IMAGE_NOT_FOUND); // Gợi ý thêm mã lỗi này
+            }
+
+            return rowsAffected;
+
+        } catch (AppException e) {
+            throw e;
+
+        } catch (Exception e) {
+            e.printStackTrace(); // hoặc log.error(...) nếu dùng logging
+            throw new AppException(ErrorCode.SYSTEM_ERROR);
+        }
     }
+
 
     @Override
     public HomestayImagesResponseDto findImageById(int id) {

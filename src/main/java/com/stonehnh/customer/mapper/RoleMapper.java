@@ -3,6 +3,8 @@ import com.stonehnh.customer.entity.Roles;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
+
+@Mapper
 public interface RoleMapper {
     /**
      * Lấy danh sách tất cả roles

@@ -8,10 +8,12 @@ import com.stonehnh.customer.dto.response.RoleResponseDto;
 import com.stonehnh.customer.entity.Roles;
 import com.stonehnh.customer.mapper.RoleMapper;
 import com.stonehnh.customer.service.RoleService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
 
+@Service
 public class RoleServiceImpl implements RoleService {
     private final RoleMapper roleMapper;
 
