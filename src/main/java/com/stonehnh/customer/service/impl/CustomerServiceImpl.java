@@ -107,8 +107,8 @@ public class CustomerServiceImpl implements CustomerService {
     @Transactional
     public int updateCustomer(String id, Customer customer) {
         /*
-        * TODO: Xử lý logic nếu có
-        * */
+         * TODO: Xử lý logic nếu có
+         * */
 
         boolean isExistedCustomer = customerMapper.isExistedCustomerById(id);
         if(!isExistedCustomer){
@@ -140,8 +140,8 @@ public class CustomerServiceImpl implements CustomerService {
         Customer customer = customerMapper.findCustomerByCustomerId(customerId);
 
         /*
-        * TODO: Xử lý logic nếu cần
-        * */
+         * TODO: Xử lý logic nếu cần
+         * */
 
         if(customer == null){
             throw new AppException(ErrorCode.CUSTOMER_NOT_FOUND);

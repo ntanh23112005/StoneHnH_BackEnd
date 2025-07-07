@@ -18,6 +18,7 @@ import com.stonehnh.owner.service.OwnerService;
 import com.stonehnh.review.service.RateService;
 import com.stonehnh.review.service.ReviewService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -51,19 +52,37 @@ public class HomestayServiceImpl implements HomestayService {
     }
 
     @Override
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
     public List<HomestayResponseDto> getAllHomestays() {
-        List<Homestay> homestays = homestayMapper.findAllHomestays();
-        return HomestayConverter.toDtoList(homestays);
+        try {
+            List<Homestay> homestays = homestayMapper.findAllHomestays();
+            return HomestayConverter.toDtoList(homestays);
+        } catch (Exception e) {
+            e.printStackTrace(); // Hoặc dùng log.error("Lỗi khi lấy danh sách homestay", e);
+            throw new AppException(ErrorCode.SYSTEM_ERROR);
+        }
     }
 
     @Override
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
     public HomestayResponseDto findHomestayById(String homestayId) {
-        Homestay homestay = homestayMapper.findHomestayById(homestayId);
-        if (homestay == null) {
-            throw new AppException(ErrorCode.HOMESTAY_NOT_FOUND);
+        try {
+            Homestay homestay = homestayMapper.findHomestayById(homestayId);
+            if (homestay == null) {
+                throw new AppException(ErrorCode.HOMESTAY_NOT_FOUND);
+            }
+
+            return HomestayConverter.toDto(homestay);
+
+        } catch (AppException e) {
+            throw e;
+
+        } catch (Exception e) {
+            e.printStackTrace(); // hoặc log.error(...) nếu có logging
+            throw new AppException(ErrorCode.SYSTEM_ERROR);
         }
-        return HomestayConverter.toDto(homestay);
     }
+
 
     @Override
     public PageDTO<HomestayHomePageResponseDto> getHomestayHomePage(String category, int page, int size) {
@@ -74,7 +93,7 @@ public class HomestayServiceImpl implements HomestayService {
         int totalItems = homestayMapper.countHomestayHomePage(checkCategory);
         int totalPages = (int) Math.ceil((double) totalItems / size);
 
-        List<HomestayHomePageResponseDto> data = homestayMapper.selectHomestayHomePage(checkCategory , size, offset);
+        List<HomestayHomePageResponseDto> data = homestayMapper.selectHomestayHomePage(checkCategory, size, offset);
         return new PageDTO<>(page, size, totalItems, totalPages, data);
     }
 
@@ -93,31 +112,78 @@ public class HomestayServiceImpl implements HomestayService {
 
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public int createHomestay(CreationHomestayDto homestayDto) {
-        Homestay homestay = HomestayConverter.toEntity(homestayDto);
-        homestay.setHomestayId(UUID.randomUUID().toString());
-        return homestayMapper.insertHomestay(homestay);
+        try {
+            Homestay homestay = HomestayConverter.toEntity(homestayDto);
+            homestay.setHomestayId(UUID.randomUUID().toString());
+
+            int rowsAffected = homestayMapper.insertHomestay(homestay);
+            if (rowsAffected == 0) {
+                throw new AppException(ErrorCode.HOMESTAY_CREATE_FAILED);
+            }
+
+            return rowsAffected;
+
+        } catch (AppException e) {
+            throw e;
+
+        } catch (Exception e) {
+            e.printStackTrace(); // hoặc log.error("Lỗi tạo homestay", e);
+            throw new AppException(ErrorCode.SYSTEM_ERROR);
+        }
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public int updateHomestay(String homestayId, CreationHomestayDto homestayDto) {
-        boolean exists = homestayMapper.isExistedHomestayById(homestayId);
-        if (!exists) {
-            throw new AppException(ErrorCode.HOMESTAY_NOT_FOUND);
-        }
+        try {
+            boolean exists = homestayMapper.isExistedHomestayById(homestayId);
+            if (!exists) {
+                throw new AppException(ErrorCode.HOMESTAY_NOT_FOUND);
+            }
 
-        Homestay homestay = HomestayConverter.toEntity(homestayDto);
-        homestay.setHomestayId(homestayId);
-        return homestayMapper.updateHomestay(homestay);
+            Homestay homestay = HomestayConverter.toEntity(homestayDto);
+            homestay.setHomestayId(homestayId);
+
+            int rowsAffected = homestayMapper.updateHomestay(homestay);
+            if (rowsAffected == 0) {
+                throw new AppException(ErrorCode.HOMESTAY_UPDATE_FAILED); // Gợi ý thêm nếu chưa có
+            }
+
+            return rowsAffected;
+
+        } catch (AppException e) {
+            throw e;
+
+        } catch (Exception e) {
+            e.printStackTrace(); // hoặc log.error("Lỗi cập nhật homestay", e);
+            throw new AppException(ErrorCode.SYSTEM_ERROR);
+        }
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public int deleteHomestay(String homestayId) {
-        boolean exists = homestayMapper.isExistedHomestayById(homestayId);
-        if (!exists) {
-            throw new AppException(ErrorCode.HOMESTAY_NOT_FOUND);
-        }
+        try {
+            boolean exists = homestayMapper.isExistedHomestayById(homestayId);
+            if (!exists) {
+                throw new AppException(ErrorCode.HOMESTAY_NOT_FOUND);
+            }
 
-        return homestayMapper.deleteHomestayById(homestayId);
+            int rowsAffected = homestayMapper.deleteHomestayById(homestayId);
+            if (rowsAffected == 0) {
+                throw new AppException(ErrorCode.HOMESTAY_DELETE_FAILED); // Gợi ý thêm mã lỗi này nếu chưa có
+            }
+
+            return rowsAffected;
+
+        } catch (AppException e) {
+            throw e;
+
+        } catch (Exception e) {
+            e.printStackTrace(); // hoặc log.error("Lỗi khi xoá homestay", e);
+            throw new AppException(ErrorCode.SYSTEM_ERROR);
+        }
     }
 }

@@ -70,8 +70,8 @@ public class CustomerRoleServiceImpl implements CustomerRoleService {
     public CustomerRoleResponseDto findCustomerRoleByCustomerId(String customerId) {
         CustomerRole customerRole = customerRoleMapper.findCustomerRoleByCustomerId(customerId);
         /*
-        * TODO: Xử lý theo nghiệp vụ
-        * */
+         * TODO: Xử lý theo nghiệp vụ
+         * */
         if (customerRole == null) {
             throw new AppException(ErrorCode.CUSTOMER_NOT_FOUND);
         }
