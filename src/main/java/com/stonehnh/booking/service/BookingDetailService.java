@@ -37,4 +37,10 @@ public interface BookingDetailService {
      * @return 1 booking detail đã tìm
      */
     BookingDetailResponseDto findBookingDetailById(String id);
+
+    /**
+     * Tìm 1 booking detail theo id
+     * @return 1 booking detail đã tìm
+     */
+    List<BookingDetailResponseDto> findBookingDetailByHomestayId(String homestayId);
 }

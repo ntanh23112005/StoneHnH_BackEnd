@@ -56,9 +56,9 @@ security:
     client:
       registration:
         google:
-          client-id: "xxxxxxxxxxxx.apps.googleusercontent.com"
-          client-secret: "xxxxxxxxxxxxxxxxxxxx"
+          client-id:
+          client-secret:
           scope:
             - openid
-            - profile
+            - profile6
             - email

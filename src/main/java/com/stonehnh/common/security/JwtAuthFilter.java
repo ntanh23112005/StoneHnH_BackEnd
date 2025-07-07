@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.stereotype.Component;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
+    private final CustomUserDetailsService userDetailsService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -36,7 +38,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 "/api/v1/homestay/**",
                 "/api/v1/customers/register",
                 "/api/v1/customers/send-verification-code",
-                "/api/v1/customers/verify-code"
+                "/api/v1/customers/verify-code",
+                "/api/v1/customers/register"
         );
 
         for (String pattern : whiteList) {
@@ -62,17 +65,19 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             }
 
             String email = jwtUtil.getEmailFromToken(token);
-            List<String> roles = jwtUtil.getRolesFromToken(token);
 
-            // Chuyển roles thành List<GrantedAuthority>
-            List<SimpleGrantedAuthority> authorities = roles.stream()
-                    .map(SimpleGrantedAuthority::new)
-                    .collect(Collectors.toList());
+// Lấy UserDetails từ DB
+            UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 
+// Tạo Authentication
             UsernamePasswordAuthenticationToken authentication =
-                    new UsernamePasswordAuthenticationToken(email, null, authorities);
-            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    new UsernamePasswordAuthenticationToken(
+                            userDetails,
+                            null,
+                            userDetails.getAuthorities()
+                    );
 
+            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
         } catch (JwtException e) {

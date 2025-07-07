@@ -1,8 +1,10 @@
 package com.stonehnh.booking.service;
 
+import com.stonehnh.booking.dto.request.CreationBookingDetailDto;
 import com.stonehnh.booking.dto.request.CreationBookingDto;
 import com.stonehnh.booking.dto.response.BookingResponseDto;
 import com.stonehnh.booking.entity.Booking;
+import com.stonehnh.common.handler.ApiResponse;
 import com.stonehnh.customer.dto.request.CreationCustomerDto;
 import com.stonehnh.customer.dto.response.CustomerResponseDto;
 import com.stonehnh.customer.entity.Customer;
@@ -40,4 +42,12 @@ public interface BookingService {
      * @return 1 booking theo id đã tìm
      */
     BookingResponseDto findBookingByBookingId (String bookingId);
+
+    /**
+     * Thêm 1 booking + chi tiết của booking đó
+     * @param creationBookingDto dto Booking
+     * @param creationBookingDetailDto dto BookingDetail
+     * @return 1 booking theo id đã tìm
+     */
+    ApiResponse<?> createBookingWithDetail(CreationBookingDto creationBookingDto, CreationBookingDetailDto creationBookingDetailDto);
 }

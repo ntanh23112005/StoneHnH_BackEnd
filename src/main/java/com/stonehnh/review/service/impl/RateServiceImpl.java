@@ -9,8 +9,10 @@ import com.stonehnh.review.entity.Rate;
 import com.stonehnh.review.mapper.RateMapper;
 import com.stonehnh.review.service.RateService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -22,51 +24,63 @@ public class RateServiceImpl implements RateService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<RateResponseDto> getAllRates() {
-        List<Rate> rateList = rateMapper.findAllRates();
-        return RateConverter.toDtoList(rateList);
+        try {
+            return RateConverter.toDtoList(rateMapper.findAllRates());
+        } catch (Exception e) {
+            throw new RuntimeException(ErrorCode.RATE_NOT_FOUND.getMessage(), e);
+        }
     }
 
-    @Override
-    public int createNewRate(CreationRateDetailDto creationRateDetailDto) {
-        Rate rate = RateConverter.toEntity(creationRateDetailDto);
-        rate.setRateId(String.valueOf(UUID.randomUUID()));
-        return rateMapper.insertRate(rate);
-    }
 
     @Override
+    @Transactional
+    public int createNewRate(CreationRateDetailDto dto) {
+        try {
+            Rate rate = RateConverter.toEntity(dto);
+            rate.setRateId(UUID.randomUUID().toString());
+            return rateMapper.insertRate(rate);
+        } catch (Exception e) {
+            throw new AppException(ErrorCode.RATE_CREATE_FAILED);
+        }
+    }
+
+
+    @Override
+    @Transactional
     public int updateRate(String rateId, Rate rate) {
-        boolean isExistedRate = rateMapper.isExistedRateById(rateId);
-        if (!isExistedRate) {
+        if (!rateMapper.isExistedRateById(rateId)) {
             throw new AppException(ErrorCode.RATE_NOT_FOUND);
         }
         return rateMapper.updateRate(rate);
     }
 
+
     @Override
+    @Transactional
     public int deleteRateById(String rateId) {
-        boolean isExistedRate = rateMapper.isExistedRateById(rateId);
-        if (!isExistedRate) {
+        if (!rateMapper.isExistedRateById(rateId)) {
             throw new AppException(ErrorCode.RATE_NOT_FOUND);
         }
         return rateMapper.deleteRate(rateId);
     }
 
+
     @Override
     public RateResponseDto findRateById(String rateId) {
-        Rate rate = rateMapper.findRateById(rateId);
-        if (rate == null) {
-            throw new AppException(ErrorCode.RATE_NOT_FOUND);
-        }
-        return RateConverter.toDto(rate);
+        return Optional.ofNullable(rateMapper.findRateById(rateId))
+                .map(RateConverter::toDto)
+                .orElseThrow(() -> new AppException(ErrorCode.RATE_NOT_FOUND));
     }
+
 
     @Override
     public List<RateResponseDto> findRateByHomestayId(String homestayId) {
-        List<Rate> rateList = rateMapper.findRateByHomestayId(homestayId);
-        if (rateList == null) {
-            throw new AppException(ErrorCode.RATE_NOT_FOUND);
-        }
-        return RateConverter.toDtoList(rateList);
+        List<Rate> rates = Optional.ofNullable(rateMapper.findRateByHomestayId(homestayId))
+                .orElseThrow(() -> new AppException(ErrorCode.RATE_NOT_FOUND));
+        return RateConverter.toDtoList(rates);
     }
+
+
 }

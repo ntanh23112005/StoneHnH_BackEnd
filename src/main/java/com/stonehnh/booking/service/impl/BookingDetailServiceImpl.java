@@ -61,4 +61,13 @@ public class BookingDetailServiceImpl implements BookingDetailService {
         }
         return BookingDetailConverter.toDto(bookingDetail);
     }
+
+    @Override
+    public List<BookingDetailResponseDto> findBookingDetailByHomestayId(String homestayId) {
+        List<BookingDetail> bookingDetailList = bookingDetailMapper.findBookingDetailByHomestayId(homestayId);
+        if (bookingDetailList == null) {
+            throw new AppException(ErrorCode.BOOKING_NOT_FOUND);
+        }
+        return BookingDetailConverter.toDtoList(bookingDetailList);
+    }
 }
