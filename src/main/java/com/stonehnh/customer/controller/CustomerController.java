@@ -3,12 +3,12 @@ package com.stonehnh.customer.controller;
 import com.stonehnh.customer.dto.request.CreationCustomerDto;
 import com.stonehnh.customer.dto.request.CreationCustomerWithRoles;
 import com.stonehnh.customer.dto.response.CustomerResponseDto;
-import com.stonehnh.customer.entity.Customer;
 import com.stonehnh.common.handler.ApiResponse;
 import com.stonehnh.customer.service.CustomerService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -67,8 +67,12 @@ public class CustomerController {
      * Cập nhật thông tin customer
      */
     @PutMapping
-    public ResponseEntity<Integer> updateCustomer(@RequestParam String id, @RequestBody Customer customer) {
-        return ResponseEntity.ok().body(customerService.updateCustomer(id, customer));
+    public ApiResponse<Object> updateCustomer(@RequestParam String id, @RequestBody CreationCustomerDto customer) {
+        return ApiResponse.builder()
+                .message("Update người dùng thành công")
+                .data(customerService.updateCustomer(id, customer))
+                .success(true)
+                .build();
     }
 
     /**
@@ -172,4 +176,19 @@ public class CustomerController {
                 .data(null)
                 .build();
     }
+
+    @PostMapping("/upload-avatar")
+    public ApiResponse<?> uploadAvatar(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("customerId") String customerId) {
+
+        String fileName = customerService.uploadAvatar(customerId, file);
+
+        return ApiResponse.builder()
+                .success(true)
+                .data(fileName)
+                .message("Upload avatar thành công.")
+                .build();
+    }
+
 }

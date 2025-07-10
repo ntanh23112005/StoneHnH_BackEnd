@@ -41,7 +41,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 "/api/v1/customers/verify-code",
                 "/api/v1/customers/register",
                 "/v3/api-docs/**",
-                "/swagger-ui/**"
+                "/swagger-ui/**",
+                "/images/**"
         );
 
         for (String pattern : whiteList) {

@@ -3,6 +3,7 @@ package com.stonehnh.homestay.mapper;
 import com.stonehnh.homestay.dto.response.HomestayHomePageResponseDto;
 import com.stonehnh.homestay.entity.Homestay;
 import org.apache.ibatis.annotations.*;
+import org.springframework.security.core.parameters.P;
 
 import java.util.List;
 import java.util.Optional;
@@ -98,14 +99,25 @@ public interface HomestayMapper {
      * @return List Homestay cho homepage
      */
     List<HomestayHomePageResponseDto> selectHomestayHomePage(@Param("category") String category,
+                                                             @Param("areaAddress") String areaAddress,
+                                                             @Param("maxCustomer") Integer maxCustomer,
                                                              @Param("limit") int limit,
                                                              @Param("offset") int offset);
 
     /**
      * Đếm số lượng Homestay
-     *
+     * @param category <optional>: thể loại
+     * @param areaAddress <optional>: địa chỉ khu vực
+     * @param maxCustomer <optional>: số khách tối đa
      * @return Số lượng homestay
      * */
-    int countHomestayHomePage(@Param("category") String category);
+    int countHomestayHomePage(@Param("category") String category,
+                              @Param("areaAddress") String areaAddress,
+                              @Param("maxCustomer") Integer maxCustomer);
 
+    /**
+     * Đếm tổng số lượng homestay
+     */
+    @Select("SELECT COUNT(*) FROM homestays")
+    int countHomestays();
 }

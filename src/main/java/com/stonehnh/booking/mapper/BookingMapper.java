@@ -75,4 +75,16 @@ public interface BookingMapper {
      */
     @Select("SELECT COUNT(*) > 0 FROM bookings WHERE bookingId = #{bookingId}")
     boolean isExistedBookingById(@Param("bookingId") String bookingId);
+
+    /**
+     * Đếm tổng số lượng hóa đơn
+     * */
+    @Select("SELECT COUNT(*) FROM bookings")
+    int countBookings();
+
+    /**
+     * Tổng cộng số tiền hóa đơn có payment_status = 1 ( đã done)
+     */
+    @Select("SELECT COALESCE(SUM(b.total_price), 0) FROM bookings b WHERE b.payment_status = 1 ")
+    Double getTotalPaymentStatus();
 }

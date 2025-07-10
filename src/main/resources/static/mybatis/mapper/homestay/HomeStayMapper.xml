@@ -24,29 +24,29 @@
     </resultMap>
     <select id="selectHomestayHomePage" resultMap="HomestayHomePageMap">
         SELECT
-            h.homestay_id,
-            h.homestay_name,
-            h.area_address,
-            h.daily_price,
-            h.hourly_price,
-            h.type,
-            h.status,
-            h.type_style,
-            h.max_customer,
-            h.number_of_beds,
-            h.number_of_bathrooms,
-            h.support_equipments,
+        h.homestay_id,
+        h.homestay_name,
+        h.area_address,
+        h.daily_price,
+        h.hourly_price,
+        h.type,
+        h.status,
+        h.type_style,
+        h.max_customer,
+        h.number_of_beds,
+        h.number_of_bathrooms,
+        h.support_equipments,
 
-            -- Điểm đánh giá trung bình
-            (SELECT AVG(r.average_rate)
-             FROM rates r
-             WHERE r.homestay_id = h.homestay_id) AS average_rate,
+        -- Điểm đánh giá trung bình
+        (SELECT AVG(r.average_rate)
+        FROM rates r
+        WHERE r.homestay_id = h.homestay_id) AS average_rate,
 
-            -- Lấy danh sách ảnh đã lưu sẵn dưới dạng chuỗi
-            (SELECT hi.homestay_image
-             FROM homestay_images hi
-             WHERE hi.homestay_id = h.homestay_id
-             AND hi.image_for = 'represent') AS image_list
+        -- Lấy danh sách ảnh đã lưu sẵn dưới dạng chuỗi
+        (SELECT hi.homestay_image
+        FROM homestay_images hi
+        WHERE hi.homestay_id = h.homestay_id
+        AND hi.image_for = 'represent') AS image_list
 
         FROM homestays h
 
@@ -54,9 +54,15 @@
             <if test="category != null and category != ''">
                 h.type = #{category}
             </if>
+            <if test="areaAddress != null and areaAddress != ''">
+                AND LOWER(h.area_address) LIKE CONCAT('%', LOWER(#{areaAddress}), '%')
+            </if>
+            <if test="maxCustomer != null and maxCustomer != 0">
+                AND h.max_customer &gt;= #{maxCustomer}
+            </if>
         </where>
 
-            LIMIT #{limit} OFFSET #{offset}
+        LIMIT #{limit} OFFSET #{offset}
     </select>
 
     <select id="countHomestayHomePage" resultType="int">
@@ -65,6 +71,12 @@
         <where>
             <if test="category != null and category != ''">
                 h.type = #{category}
+            </if>
+            <if test="areaAddress != null and areaAddress != ''">
+                AND LOWER(h.area_address) LIKE CONCAT('%', LOWER(#{areaAddress}), '%')
+            </if>
+            <if test="maxCustomer != null and maxCustomer != 0">
+                AND h.max_customer &gt;= #{maxCustomer}
             </if>
         </where>
     </select>

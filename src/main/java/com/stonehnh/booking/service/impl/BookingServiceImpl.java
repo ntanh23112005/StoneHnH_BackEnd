@@ -132,4 +132,14 @@ public class BookingServiceImpl implements BookingService {
                 .data(createdDetail)
                 .build();
     }
+
+    @Override
+    public int countBookings() {
+        return bookingMapper.countBookings();
+    }
+
+    @Override
+    public Double getTotalPaymentStatus() {
+        return bookingMapper.getTotalPaymentStatus();
+    }
 }

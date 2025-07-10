@@ -51,7 +51,7 @@ public interface HomestayService {
      *
      * @return List homestay cho homepage
      * */
-    PageDTO<HomestayHomePageResponseDto> getHomestayHomePage(String category, int page, int size);
+    PageDTO<HomestayHomePageResponseDto> getHomestayHomePage(String category, String areaAddress, Integer maxCustomer, int page, int size);
 
     /**
      * Lấy homestay cho detail Page
@@ -59,4 +59,9 @@ public interface HomestayService {
      * @return homestay cho detail Page
      * */
     HomestayDetailResponseDto getHomestayDetail(String homestayId);
+
+    /**
+     * Đếm toàn bộ số lượng homestay
+     */
+    int countAllHomestays();
 }

@@ -49,4 +49,36 @@
         WHERE c.email = #{email}
     </select>
 
+    <select id="findCustomersByEmailLike" resultMap="customerResponseDtoMap">
+        SELECT
+            c.customer_id,
+            c.customer_name,
+            c.email,
+            c.password,
+            c.phone_number,
+            c.customer_address,
+            c.created_date,
+            c.customer_picture,
+            c.verify_status,
+            c.account_status
+        FROM customers c
+        WHERE c.email LIKE CONCAT('%', #{email}, '%')
+    </select>
+
+    <!-- getAll với nested roles -->
+    <select id="getAllCustomerAndRoles" resultMap="customerResponseDtoMap">
+        SELECT
+            c.customer_id,
+            c.customer_name,
+            c.email,
+            c.password,
+            c.phone_number,
+            c.customer_address,
+            c.created_date,
+            c.customer_picture,
+            c.verify_status,
+            c.account_status
+        FROM customers c
+    </select>
+
 </mapper>

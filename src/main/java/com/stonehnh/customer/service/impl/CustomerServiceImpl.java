@@ -13,6 +13,7 @@ import com.stonehnh.common.enums.ErrorCode;
 import com.stonehnh.common.exception.AppException;
 import com.stonehnh.customer.mapper.CustomerMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,7 +21,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.security.SecureRandom;
 import java.util.List;
 import java.util.UUID;
@@ -105,7 +113,48 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     @Transactional
-    public int updateCustomer(String id, Customer customer) {
+    public CustomerResponseDto updateCustomerWithRole(CreationCustomerDto dto, List<String> roleIds) {
+        // Kiểm tra tồn tại
+        CustomerResponseDto existing =  customerMapper.findCustomerByEmail(dto.getEmail());
+        if (existing == null) {
+            throw new RuntimeException("Người dùng không tồn tại");
+        }
+
+        // Cập nhật thông tin (trừ password nếu không gửi lại)
+        existing.setCustomerName(dto.getCustomerName());
+        existing.setPhoneNumber(dto.getPhoneNumber());
+        existing.setCustomerAddress(dto.getCustomerAddress());
+        existing.setVerifyStatus(dto.getVerifyStatus());
+        existing.setAccountStatus(dto.getAccountStatus());
+        if (dto.getCustomerPicture() != null) {
+            existing.setCustomerPicture(dto.getCustomerPicture());
+        }
+        if (dto.getPassword() != null && !dto.getPassword().isEmpty()) {
+            existing.setPassword(passwordEncoder.encode(dto.getPassword()));
+        }
+
+        customerMapper.updateCustomer(CustomerConverter.toEntity(existing)); // update trong DB
+
+        // --- Xử lý roles ---
+        if (roleIds != null && !roleIds.isEmpty()) {
+            // Xóa role cũ
+            customerRoleMapper.deleteCustomerById(existing.getCustomerId());
+
+            // Gán lại role mới (nếu có)
+            for (String roleId : roleIds) {
+                CreationCustomerRoleDto roleDto = new CreationCustomerRoleDto();
+                roleDto.setCustomerId(existing.getCustomerId());
+                roleDto.setRoleId(roleId);
+                customerRoleMapper.insertCustomerRole(CustomerRoleConverter.toEntity(roleDto));
+            }
+        }
+
+        return existing;
+    }
+
+    @Override
+    @Transactional
+    public int updateCustomer(String id, CreationCustomerDto customer) {
         /*
          * TODO: Xử lý logic nếu có
          * */
@@ -116,7 +165,7 @@ public class CustomerServiceImpl implements CustomerService {
             throw new AppException(ErrorCode.CUSTOMER_NOT_FOUND);
         }
 
-        return customerMapper.updateCustomer(customer);
+        return customerMapper.updateCustomer(CustomerConverter.toEntity(customer));
 
     }
 
@@ -223,5 +272,36 @@ public class CustomerServiceImpl implements CustomerService {
         if (affectedRows == 0) {
             System.out.println("Lỗi");
         }
+    }
+
+    @Override
+    public String uploadAvatar(String customerId, MultipartFile file) {
+        try {
+            String originalFileName = file.getOriginalFilename();
+            String fileName = System.currentTimeMillis() + "_" + originalFileName;
+
+            File uploadDir = new ClassPathResource("static/images/avatar").getFile();
+            if (!uploadDir.exists()) uploadDir.mkdirs();
+
+            Path path = Paths.get(uploadDir.getAbsolutePath(), fileName);
+            Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+
+            Customer customer = customerMapper.findCustomerByCustomerId(customerId);
+            if (customer == null) {
+                System.out.println("Lỗi: " + ErrorCode.CUSTOMER_NOT_FOUND);
+                return null;
+            }
+            customer.setCustomerPicture(fileName);
+            customerMapper.updateCustomer(customer);
+
+            return customer.getCustomerPicture();
+        } catch (IOException e) {
+            throw new RuntimeException("Lỗi upload ảnh", e);
+        }
+    }
+
+    @Override
+    public int countAllCustomers() {
+        return customerMapper.countCustomers();
     }
 }

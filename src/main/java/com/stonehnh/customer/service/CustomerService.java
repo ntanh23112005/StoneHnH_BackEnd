@@ -3,6 +3,7 @@ package com.stonehnh.customer.service;
 import com.stonehnh.customer.dto.request.CreationCustomerDto;
 import com.stonehnh.customer.dto.response.CustomerResponseDto;
 import com.stonehnh.customer.entity.Customer;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -22,6 +23,13 @@ public interface CustomerService {
      */
     CustomerResponseDto createNewCustomerWithRole(CreationCustomerDto creationCustomerDto, List<String> roleId);
 
+    /**
+     * Cập nhật Customer và customer_role
+     * @param dto thuộc tính của customer
+     * @param roleIds list quyền
+     * @return CustomerResponseDto
+     */
+    CustomerResponseDto updateCustomerWithRole(CreationCustomerDto dto, List<String> roleIds);
 
     /**
      * Cập nhật 1 Customer
@@ -29,7 +37,7 @@ public interface CustomerService {
      * @param customer 1 đối tượng Customer
      * @return Số dòng bị ảnh hưởng
      */
-    int updateCustomer(String customerId, Customer customer);
+    int updateCustomer(String customerId, CreationCustomerDto customer);
 
     /**
      * Xóa 1 Customer
@@ -79,4 +87,17 @@ public interface CustomerService {
      * @param newPassword Mật khẩu mới (chưa mã hóa)
      */
     void resetPassword(String email, String newPassword);
+
+    /**
+     * Cập nhật tên file hình theo id
+     * @param customerId id của khách hàng
+     * @param file file hình cần lưu
+     * @return Customer đã hoàn thành
+     */
+    String uploadAvatar(String customerId, MultipartFile file);
+
+    /**
+     * Đếm số lượng customer
+     */
+    int countAllCustomers();
 }
