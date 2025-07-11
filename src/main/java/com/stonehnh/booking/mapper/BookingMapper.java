@@ -1,5 +1,6 @@
 package com.stonehnh.booking.mapper;
 
+import com.stonehnh.booking.dto.response.BookingWithDetailDto;
 import com.stonehnh.booking.entity.Booking;
 import org.apache.ibatis.annotations.*;
 
@@ -63,7 +64,7 @@ public interface BookingMapper {
                     "customer_id, " +
                     "total_price, " +
                     "payment_status " +
-            "FROM bookings" +
+            "FROM bookings " +
             "WHERE booking_id = #{bookingId}")
     Booking findBookingByBookingId(@Param("bookingId") String bookingId);
 
@@ -75,4 +76,33 @@ public interface BookingMapper {
      */
     @Select("SELECT COUNT(*) > 0 FROM bookings WHERE bookingId = #{bookingId}")
     boolean isExistedBookingById(@Param("bookingId") String bookingId);
+
+    /**
+     * Đếm tổng số lượng hóa đơn
+     * */
+    @Select("SELECT COUNT(*) FROM bookings")
+    int countBookings();
+
+    /**
+     * Tổng cộng số tiền hóa đơn có payment_status = 1 ( đã done)
+     */
+    @Select("SELECT COALESCE(SUM(b.total_price), 0) FROM bookings b WHERE b.payment_status = 1 ")
+    Double getTotalPaymentStatus();
+
+    @Select("""
+    SELECT
+        b.booking_id,
+        b.customer_id,
+        c.customer_name,
+        bd.homestay_id,
+        h.homestay_name,
+        b.total_price,
+        b.payment_status,
+        bd.check_in_time AS booking_date
+    FROM bookings b
+    LEFT JOIN customers c ON b.customer_id = c.customer_id
+    LEFT JOIN booking_details bd ON b.booking_id = bd.booking_id
+    LEFT JOIN homestays h ON bd.homestay_id = h.homestay_id
+    """)
+    List<BookingWithDetailDto> findAllBookingsWithDetails();
 }

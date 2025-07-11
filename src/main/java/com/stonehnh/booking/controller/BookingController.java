@@ -2,6 +2,7 @@ package com.stonehnh.booking.controller;
 
 import com.stonehnh.booking.dto.request.CreationBookingWrapperDto;
 import com.stonehnh.booking.dto.response.BookingResponseDto;
+import com.stonehnh.booking.dto.response.BookingWithDetailDto;
 import com.stonehnh.booking.service.BookingService;
 import com.stonehnh.common.handler.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,7 @@ public class BookingController {
     // Lấy danh sách tất cả booking
     @GetMapping
     public ApiResponse<Object> getAllBookings() {
-        List<BookingResponseDto> bookings = bookingService.getAllBookings();
+        List<BookingWithDetailDto> bookings = bookingService.getAllBookingsWithDetails();
         return ApiResponse.builder()
                 .success(true)
                 .message("Lấy danh sách đơn đặt phòng thành công.")

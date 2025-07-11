@@ -1,12 +1,14 @@
 package com.stonehnh.customer.dto.request;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Date;
 
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
+@Builder
 public class CreationCustomerDto {
     private String customerId;
     private String customerName;

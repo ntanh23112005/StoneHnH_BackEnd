@@ -85,17 +85,21 @@ public class HomestayServiceImpl implements HomestayService {
 
 
     @Override
-    public PageDTO<HomestayHomePageResponseDto> getHomestayHomePage(String category, int page, int size) {
-
+    public PageDTO<HomestayHomePageResponseDto> getHomestayHomePage(String category, String areaAddress, Integer maxCustomer, int page, int size) {
         String checkCategory = (category == null || category.isEmpty() || category.equalsIgnoreCase("all")) ? null : category;
+        String checkArea = (areaAddress == null || areaAddress.trim().isEmpty() || areaAddress.equalsIgnoreCase("null")) ? null : areaAddress;
+        Integer checkMax = (maxCustomer == null || maxCustomer == 0) ? null : maxCustomer;
 
         int offset = (page - 1) * size;
-        int totalItems = homestayMapper.countHomestayHomePage(checkCategory);
+
+        int totalItems = homestayMapper.countHomestayHomePage(checkCategory, checkArea, checkMax);
         int totalPages = (int) Math.ceil((double) totalItems / size);
 
-        List<HomestayHomePageResponseDto> data = homestayMapper.selectHomestayHomePage(checkCategory, size, offset);
+        List<HomestayHomePageResponseDto> data = homestayMapper.selectHomestayHomePage(checkCategory, checkArea, checkMax, size, offset);
+
         return new PageDTO<>(page, size, totalItems, totalPages, data);
     }
+
 
     @Override
     public HomestayDetailResponseDto getHomestayDetail(String homestayId) {
@@ -108,6 +112,11 @@ public class HomestayServiceImpl implements HomestayService {
         dto.setReviews(reviewService.findReviewsByHomestayId(homestayId));
         dto.setRates(rateService.findRateByHomestayId(homestayId));
         return dto;
+    }
+
+    @Override
+    public int countAllHomestays() {
+        return homestayMapper.countHomestays();
     }
 
 

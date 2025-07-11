@@ -77,11 +77,13 @@ public class HomeStayController {
      */
     @GetMapping
     public ApiResponse<Object> getAllHomestaysForHomePage(
-            @RequestParam String category,
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) String areaAddress,
+            @RequestParam(required = false) Integer maxCustomer,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "8") int size) {
 
-        PageDTO<HomestayHomePageResponseDto> result = homestayService.getHomestayHomePage(category, page, size);
+        PageDTO<HomestayHomePageResponseDto> result = homestayService.getHomestayHomePage(category, areaAddress, maxCustomer, page, size);
 
         return ApiResponse.builder()
                 .success(true)

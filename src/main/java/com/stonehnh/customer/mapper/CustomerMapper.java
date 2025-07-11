@@ -1,8 +1,10 @@
 package com.stonehnh.customer.mapper;
 
+import com.stonehnh.customer.dto.request.CreationCustomerDto;
 import com.stonehnh.customer.dto.response.CustomerResponseDto;
 import com.stonehnh.customer.entity.Customer;
 import org.apache.ibatis.annotations.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -77,6 +79,8 @@ public interface CustomerMapper {
 
     List<String> getRolesByEmail(@Param("email") String email);
 
+    List<CustomerResponseDto> findCustomersByEmailLike(@Param("email") String email);
+
     /**
      * Cập nhật mật khẩu theo email
      * @param email email của khách hàng
@@ -102,4 +106,26 @@ public interface CustomerMapper {
     @Select("SELECT COUNT(1) > 0 FROM customers WHERE phone_number = #{phoneNumber}")
     boolean existsByPhoneNumber(@Param("phoneNumber") String phoneNumber);
 
+    /**
+     * Cập nhật tên file hình theo id
+     * @param customerId id của khách hàng
+     * @param customerPicture tên file hình cần lưu
+     * @return Customer đã hoàn thành
+     */
+    @Update("UPDATE customers c" +
+            "SET c.customer_picture = #{customerPicture} " +
+            "WHERE c.customer_id = #{customerId}")
+    Customer uploadImage(@Param("customerId") String customerId ,@Param("customerPicture") String customerPicture);
+
+    /**
+     * Đếm số lượng customer
+     * */
+    @Select("SELECT COUNT(*) FROM customers")
+    int countCustomers();
+
+    /**
+     * Lấy danh sách Customer + List<Role> của customer
+     * @return List<CustomerResponseDto>
+     */
+    List<CustomerResponseDto> getAllCustomerAndRoles();
 }

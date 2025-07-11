@@ -110,4 +110,28 @@ public class CustomerConverter {
 
         return customer;
     }
+
+    /**
+     * Chuyển đổi từ dto -> entity
+     * @param dto CustomerResponseDto
+     * @return Customer
+     */
+    public static Customer toEntity(CustomerResponseDto dto) {
+        if (dto == null) return null;
+
+        Customer customer = new Customer();
+        customer.setCustomerId(dto.getCustomerId());
+        customer.setCustomerName(dto.getCustomerName());
+        customer.setPassword(dto.getPassword());
+        customer.setEmail(dto.getEmail());
+        customer.setPhoneNumber(dto.getPhoneNumber());
+        customer.setCustomerAddress(dto.getCustomerAddress());
+        customer.setCreatedDate(dto.getCreatedDate());
+        customer.setCustomerPicture(dto.getCustomerPicture());
+        customer.setVerifyStatus(dto.getVerifyStatus());
+        customer.setAccountStatus(dto.getAccountStatus());
+
+        return customer;
+    }
+
 }
