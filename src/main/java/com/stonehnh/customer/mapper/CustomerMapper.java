@@ -85,4 +85,21 @@ public interface CustomerMapper {
      */
     @Update("UPDATE customers SET password = #{encodedPassword} WHERE email = #{email}")
     int updatePasswordByEmail(@Param("email") String email, @Param("encodedPassword") String encodedPassword);
+
+    /**
+     * Kiểm tra sự tồn tại của email
+     * @param email Email cần kiểm tra
+     * @return true nếu tồn tại
+     */
+    @Select("SELECT COUNT(1) > 0 FROM customers WHERE email = #{email}")
+    boolean existsByEmail(@Param("email") String email);
+
+    /**
+     * Kiểm tra sự tồn tại của số điện thoại
+     * @param phoneNumber Số điện thoại cần kiểm tra
+     * @return true nếu tồn tại
+     */
+    @Select("SELECT COUNT(1) > 0 FROM customers WHERE phone_number = #{phoneNumber}")
+    boolean existsByPhoneNumber(@Param("phoneNumber") String phoneNumber);
+
 }

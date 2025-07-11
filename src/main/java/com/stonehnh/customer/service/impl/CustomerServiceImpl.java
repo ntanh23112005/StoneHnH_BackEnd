@@ -55,6 +55,17 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     @Transactional
     public CustomerResponseDto createNewCustomerWithRole(CreationCustomerDto dto, List<String> roleIds) {
+        // Kiểm tra email tồn tại
+        if (customerMapper.existsByEmail(dto.getEmail())) {
+            throw new AppException(ErrorCode.EMAIL_ALREADY_EXISTS);
+        }
+
+        // Kiểm tra số điện thoại tồn tại
+        if (dto.getPhoneNumber() != null && !dto.getPhoneNumber().isEmpty()) {
+            if (customerMapper.existsByPhoneNumber(dto.getPhoneNumber())) {
+                throw new AppException(ErrorCode.PHONE_NUMBER_ALREADY_EXISTS);
+            }
+        }
         // Tạo customer entity
         Customer customer = CustomerConverter.toEntity(dto);
         customer.setCustomerId(UUID.randomUUID().toString());
@@ -208,20 +219,29 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     @Transactional
     public void resetPassword(String email, String newPassword) {
+        // Tìm customer theo email
         Customer customer = customerMapper.findCustomerByCustomerId(
                 customerMapper.findCustomerByEmail(email).getCustomerId()
         );
+
         if (customer == null) {
             throw new AppException(ErrorCode.CUSTOMER_NOT_FOUND);
         }
 
-        // Mã hóa mật khẩu
+        // So sánh password hiện tại với GOOGLE_PASSWORD
+        boolean isGooglePassword = passwordEncoder.matches("GOOGLE_PASSWORD", customer.getPassword());
+        System.out.println(isGooglePassword);
+        if (isGooglePassword) {
+            throw new AppException();
+        }
+
+        // Mã hóa mật khẩu mới
         String encodedPassword = passwordEncoder.encode(newPassword);
 
-        // Gọi mapper riêng để chỉ update password
+        // Update password
         int affectedRows = customerMapper.updatePasswordByEmail(email, encodedPassword);
         if (affectedRows == 0) {
-            System.out.println("Lỗi");
+            System.out.println("Lỗi khi update password");
         }
     }
 }
