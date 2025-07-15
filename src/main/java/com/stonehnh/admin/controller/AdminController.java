@@ -2,6 +2,8 @@ package com.stonehnh.admin.controller;
 
 import com.stonehnh.admin.dto.response.HomestayDto;
 import com.stonehnh.admin.service.AdminService;
+import com.stonehnh.booking.dto.response.BookingWithDetailDto;
+import com.stonehnh.booking.service.BookingService;
 import com.stonehnh.common.handler.ApiResponse;
 import com.stonehnh.customer.dto.request.CreationCustomerWithRoles;
 import com.stonehnh.customer.dto.response.CustomerResponseDto;
@@ -23,11 +25,13 @@ public class AdminController {
     private final AdminService adminService;
     private final CustomerService customerService;
     private final CustomerMapper customerMapper;
+    private final BookingService bookingService;
 
-    public AdminController(AdminService adminService, CustomerService customerService, CustomerMapper customerMapper) {
+    public AdminController(AdminService adminService, CustomerService customerService, CustomerMapper customerMapper, BookingService bookingService) {
         this.adminService = adminService;
         this.customerService = customerService;
         this.customerMapper = customerMapper;
+        this.bookingService = bookingService;
     }
 
     @GetMapping("/stats")
@@ -135,6 +139,16 @@ public class AdminController {
                 .success(true)
                 .message("Cập nhật trạng thái homestay thành công")
                 .data(null)
+                .build();
+    }
+
+    @GetMapping("/bookings")
+    public ApiResponse<Object> getAllBookings() {
+        List<BookingWithDetailDto> bookings = bookingService.getAllBookingsWithDetails();
+        return ApiResponse.builder()
+                .success(true)
+                .message("Lấy danh sách đơn đặt phòng thành công.")
+                .data(bookings)
                 .build();
     }
 }

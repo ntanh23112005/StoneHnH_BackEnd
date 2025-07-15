@@ -36,7 +36,7 @@ public class BookingController {
     // Lấy danh sách tất cả booking
     @GetMapping
     public ApiResponse<Object> getAllBookings() {
-        List<BookingWithDetailDto> bookings = bookingService.getAllBookingsWithDetails();
+        List<BookingResponseDto> bookings = bookingService.getAllBookings();
         return ApiResponse.builder()
                 .success(true)
                 .message("Lấy danh sách đơn đặt phòng thành công.")
