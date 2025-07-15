@@ -1,7 +1,7 @@
 package com.stonehnh.owner.service;
 
 import com.stonehnh.owner.dto.request.CreationOwnerDto;
-import com.stonehnh.owner.dto.response.OwnerResponseDto;
+import com.stonehnh.owner.dto.response.*;
 
 import java.util.List;
 
@@ -47,4 +47,17 @@ public interface OwnerService {
      * @return Số dòng bị ảnh hưởng
      */
     int deleteOwner(String customerId, String homestayId);
+
+    void registerAsOwner(String customerId);
+
+    OwnerStatisticsDto getStatistics(String customerId);
+
+    List<OwnerBookingDetailDto> getAllBookingDetails(String customerId);
+
+    List<OwnerBookingDto> getAllBookings(String customerId);
+
+    List<MonthlyRevenueOwnerDto> getMonthlyRevenue(String customerId);
+
+    List<OwnerHomestayDto> getOwnedHomestaysWithImages(String customerId);
+
 }

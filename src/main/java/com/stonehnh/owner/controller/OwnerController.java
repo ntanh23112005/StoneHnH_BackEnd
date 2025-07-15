@@ -2,9 +2,14 @@ package com.stonehnh.owner.controller;
 
 import com.stonehnh.common.handler.ApiResponse;
 import com.stonehnh.owner.dto.request.CreationOwnerDto;
-import com.stonehnh.owner.dto.response.OwnerResponseDto;
+import com.stonehnh.owner.dto.request.RegisterOwnerRoleRequest;
+import com.stonehnh.owner.dto.response.*;
 import com.stonehnh.owner.service.OwnerService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/owners")
@@ -68,5 +73,40 @@ public class OwnerController {
                 .message("Xoá chủ sở hữu thành công.")
                 .data(result)
                 .build();
+    }
+
+    @PostMapping("/register-role")
+    public ResponseEntity<Void> registerOwnerRole(@RequestBody RegisterOwnerRoleRequest request) {
+        ownerService.registerAsOwner(request.getCustomerId());
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @GetMapping("/statistics/{customerId}")
+    public ResponseEntity<OwnerStatisticsDto> getStatistics(@PathVariable String customerId) {
+        OwnerStatisticsDto statistics = ownerService.getStatistics(customerId);
+        return ResponseEntity.ok(statistics);
+    }
+
+    @GetMapping("/bookings/details/{customerId}")
+    public ResponseEntity<List<OwnerBookingDetailDto>> getAllBookingDetails(@PathVariable String customerId) {
+        List<OwnerBookingDetailDto> details = ownerService.getAllBookingDetails(customerId);
+        return ResponseEntity.ok(details);
+    }
+
+    @GetMapping("/bookings/{customerId}")
+    public ResponseEntity<List<OwnerBookingDto>> getAllBookings(@PathVariable String customerId) {
+        List<OwnerBookingDto> bookings = ownerService.getAllBookings(customerId);
+        return ResponseEntity.ok(bookings);
+    }
+
+    @GetMapping("/revenue/monthly/{customerId}")
+    public ResponseEntity<List<MonthlyRevenueOwnerDto>> getMonthlyRevenue(@PathVariable String customerId) {
+        List<MonthlyRevenueOwnerDto> revenue = ownerService.getMonthlyRevenue(customerId);
+        return ResponseEntity.ok(revenue);
+    }
+
+    @GetMapping("/{customerId}/homestays")
+    public List<OwnerHomestayDto> getOwnedHomestays(@PathVariable String customerId) {
+        return ownerService.getOwnedHomestaysWithImages(customerId);
     }
 }

@@ -62,4 +62,16 @@ public interface CustomerRoleMapper {
     @Select("SELECT COUNT(*) > 0 FROM customer_roles WHERE customer_id = #{customerId}")
     boolean isExistedCustomerById(@Param("customerId") String customerId);
 
+    @Select("""
+        SELECT COUNT(*) > 0
+        FROM customer_roles
+        WHERE customer_id = #{customerId} AND role_id = #{roleId}
+    """)
+    boolean existsByCustomerIdAndRoleId(@Param("customerId") String customerId, @Param("roleId") String roleId);
+
+    @Insert("""
+        INSERT INTO customer_roles(customer_id, role_id)
+        VALUES(#{customerId}, #{roleId})
+    """)
+    void insertRoleForCustomer(@Param("customerId") String customerId, @Param("roleId") String roleId);
 }
