@@ -77,7 +77,7 @@ public class HomeStayController {
      */
     @GetMapping
     public ApiResponse<Object> getAllHomestaysForHomePage(
-            @RequestParam String category,
+            @RequestParam(required = false) String category,
             @RequestParam(required = false) String areaAddress,
             @RequestParam(required = false) Integer maxCustomer,
             @RequestParam(defaultValue = "1") int page,

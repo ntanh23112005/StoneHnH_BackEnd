@@ -5,6 +5,7 @@ import com.stonehnh.booking.converter.BookingDetailConverter;
 import com.stonehnh.booking.dto.request.CreationBookingDetailDto;
 import com.stonehnh.booking.dto.request.CreationBookingDto;
 import com.stonehnh.booking.dto.response.BookingResponseDto;
+import com.stonehnh.booking.dto.response.BookingWithDetailDto;
 import com.stonehnh.booking.entity.Booking;
 import com.stonehnh.booking.entity.BookingDetail;
 import com.stonehnh.booking.mapper.BookingDetailMapper;
@@ -141,5 +142,10 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public Double getTotalPaymentStatus() {
         return bookingMapper.getTotalPaymentStatus();
+    }
+
+    @Override
+    public List<BookingWithDetailDto> getAllBookingsWithDetails() {
+        return bookingMapper.findAllBookingsWithDetails();
     }
 }

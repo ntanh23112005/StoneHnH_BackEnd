@@ -1,16 +1,21 @@
 package com.stonehnh.admin.controller;
 
+import com.stonehnh.admin.dto.response.HomestayDto;
 import com.stonehnh.admin.service.AdminService;
+import com.stonehnh.booking.dto.response.BookingWithDetailDto;
+import com.stonehnh.booking.service.BookingService;
 import com.stonehnh.common.handler.ApiResponse;
 import com.stonehnh.customer.dto.request.CreationCustomerWithRoles;
 import com.stonehnh.customer.dto.response.CustomerResponseDto;
 import com.stonehnh.customer.mapper.CustomerMapper;
 import com.stonehnh.customer.service.CustomerService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/admin")
@@ -20,11 +25,13 @@ public class AdminController {
     private final AdminService adminService;
     private final CustomerService customerService;
     private final CustomerMapper customerMapper;
+    private final BookingService bookingService;
 
-    public AdminController(AdminService adminService, CustomerService customerService, CustomerMapper customerMapper) {
+    public AdminController(AdminService adminService, CustomerService customerService, CustomerMapper customerMapper, BookingService bookingService) {
         this.adminService = adminService;
         this.customerService = customerService;
         this.customerMapper = customerMapper;
+        this.bookingService = bookingService;
     }
 
     @GetMapping("/stats")
@@ -108,4 +115,40 @@ public class AdminController {
                 .build();
     }
 
+    @GetMapping("/homestays")
+    public ApiResponse<Object> getAllHomestays(
+            @RequestParam(defaultValue = "10") int limit,
+            @RequestParam(defaultValue = "0") int offset) {
+        List<HomestayDto> homestayList = adminService.getAllHomestays(limit, offset);
+        return ApiResponse.builder()
+                .success(true)
+                .message("Lấy danh sách homestay thành công")
+                .data(homestayList)
+                .build();
+    }
+
+    @PutMapping("/homestays/{homestayId}/status")
+    public ApiResponse<Object> updateHomestayStatus(
+            @PathVariable String homestayId,
+            @RequestBody Map<String, Boolean> payload) {
+
+        Boolean status = payload.get("status");
+        adminService.updateHomestayStatus(homestayId, status);
+
+        return ApiResponse.builder()
+                .success(true)
+                .message("Cập nhật trạng thái homestay thành công")
+                .data(null)
+                .build();
+    }
+
+    @GetMapping("/bookings")
+    public ApiResponse<Object> getAllBookings() {
+        List<BookingWithDetailDto> bookings = bookingService.getAllBookingsWithDetails();
+        return ApiResponse.builder()
+                .success(true)
+                .message("Lấy danh sách đơn đặt phòng thành công.")
+                .data(bookings)
+                .build();
+    }
 }

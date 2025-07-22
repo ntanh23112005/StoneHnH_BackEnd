@@ -60,6 +60,8 @@ public enum ErrorCode {
     INVALID_ID_TOKEN("AUTH_006", "ID token không hợp lệ"),
     FAILED_TO_CREATE_ACCOUNT("AUTH_007", "Không thể tạo tài khoản mới"),
     SERVER_ERROR("AUTH_008", "Lỗi server"),
+    EMAIL_ALREADY_EXISTS("AUTH_009", "Email đã tồn tại."),
+    PHONE_NUMBER_ALREADY_EXISTS("AUTH_010", "Số điện thoại đã tồn tại."),
 
     // ===== SUCCESS MESSAGE =====
     LOGIN_SUCCESS("AUTH_100", "Đăng nhập thành công"),

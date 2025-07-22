@@ -1,5 +1,6 @@
 package com.stonehnh.owner.mapper;
 
+import com.stonehnh.owner.dto.response.*;
 import com.stonehnh.owner.entity.Owner;
 import org.apache.ibatis.annotations.*;
 
@@ -92,4 +93,137 @@ public interface OwnerMapper {
     @Select("SELECT CASE WHEN COUNT(*) > 0 THEN TRUE ELSE FALSE END FROM Owner WHERE customerId = #{customerId}")
     boolean existsOwner(@Param("customerId") String customerId);
 
+    @Select("""
+    SELECT 
+        (SELECT IFNULL(SUM(b.total_price), 0)
+         FROM owners o
+         JOIN booking_details bd ON o.homestay_id = bd.homestay_id
+         JOIN bookings b ON bd.booking_id = b.booking_id
+         JOIN payments p ON b.booking_id = p.booking_id
+         WHERE o.customer_id = #{customerId}
+           AND p.status = 1) AS totalRevenue,
+
+        (SELECT COUNT(*) 
+         FROM owners o
+         JOIN homestays h ON o.homestay_id = h.homestay_id
+         WHERE o.customer_id = #{customerId}
+           AND h.status = TRUE) AS activeHomestays,
+
+        (SELECT COUNT(*) 
+         FROM owners o
+         JOIN homestays h ON o.homestay_id = h.homestay_id
+         WHERE o.customer_id = #{customerId}
+           AND h.status = FALSE) AS inactiveHomestays,
+
+        (SELECT COUNT(DISTINCT b.booking_id)
+         FROM owners o
+         JOIN booking_details bd ON o.homestay_id = bd.homestay_id
+         JOIN bookings b ON bd.booking_id = b.booking_id
+         JOIN payments p ON b.booking_id = p.booking_id
+         WHERE o.customer_id = #{customerId}
+           AND p.status = 0) AS bookingStatus0,
+
+        (SELECT COUNT(DISTINCT b.booking_id)
+         FROM owners o
+         JOIN booking_details bd ON o.homestay_id = bd.homestay_id
+         JOIN bookings b ON bd.booking_id = b.booking_id
+         JOIN payments p ON b.booking_id = p.booking_id
+         WHERE o.customer_id = #{customerId}
+           AND p.status = 1) AS bookingStatus1,
+
+        (SELECT COUNT(DISTINCT b.booking_id)
+         FROM owners o
+         JOIN booking_details bd ON o.homestay_id = bd.homestay_id
+         JOIN bookings b ON bd.booking_id = b.booking_id
+         JOIN payments p ON b.booking_id = p.booking_id
+         WHERE o.customer_id = #{customerId}
+           AND p.status = 2) AS bookingStatus2
+    """)
+    OwnerStatisticsDto getOwnerStatistics(@Param("customerId") String customerId);
+
+    @Select("""
+        SELECT 
+            b.booking_id,
+            b.customer_id,
+            b.total_price,
+            b.payment_status,
+            bd.booking_time,
+            bd.check_in_time,
+            bd.check_out_time,
+            bd.number_of_customers,
+            bd.number_of_pets,
+            h.homestay_id,
+            h.homestay_name
+        FROM 
+            owners o
+            JOIN booking_details bd ON o.homestay_id = bd.homestay_id
+            JOIN bookings b ON bd.booking_id = b.booking_id
+            JOIN homestays h ON bd.homestay_id = h.homestay_id
+        WHERE
+            o.customer_id = #{customerId}
+        ORDER BY
+            bd.booking_time DESC
+    """)
+    List<OwnerBookingDetailDto> getAllBookingDetailsByOwner(@Param("customerId") String customerId);
+
+    @Select("""
+        SELECT DISTINCT
+            b.booking_id,
+            b.customer_id,
+            b.total_price,
+            b.payment_status
+        FROM
+            owners o
+            JOIN booking_details bd ON o.homestay_id = bd.homestay_id
+            JOIN bookings b ON bd.booking_id = b.booking_id
+        WHERE
+            o.customer_id = #{customerId}
+    """)
+    List<OwnerBookingDto> getAllBookingsByOwner(@Param("customerId") String customerId);
+
+    @Select("""
+    SELECT 
+        MONTH(bd.check_out_time) AS month,
+        IFNULL(SUM(b.total_price), 0) AS revenue
+    FROM owners o
+    JOIN booking_details bd ON o.homestay_id = bd.homestay_id
+    JOIN bookings b ON bd.booking_id = b.booking_id
+    JOIN payments p ON b.booking_id = p.booking_id
+    WHERE o.customer_id = #{customerId}
+      AND p.status = 1
+    GROUP BY MONTH(bd.check_out_time)
+    ORDER BY month
+""")
+    List<MonthlyRevenueOwnerDto> getMonthlyRevenue(@Param("customerId") String customerId);
+
+    @Select("""
+    SELECT 
+        h.homestay_id,
+        h.homestay_name,
+        h.country_address,
+        h.area_address,
+        h.detail_address,
+        h.daily_price,
+        h.hourly_price,
+        h.type,
+        h.status,
+        h.type_style,
+        h.have_pet,
+        h.max_customer,
+        h.number_of_beds,
+        h.number_of_bathrooms,
+        h.conveniences,
+        h.options,
+        h.entrance_parking,
+        h.bedroom_details,
+        h.bathroom_details,
+        h.support_equipments,
+        hi.homestay_image,
+        hi.image_for
+    FROM owners o
+    JOIN homestays h ON o.homestay_id = h.homestay_id
+    LEFT JOIN homestay_images hi ON h.homestay_id = hi.homestay_id
+    WHERE o.customer_id = #{customerId}
+""")
+    List<OwnerHomestayDto> getOwnedHomestaysWithImages(@Param("customerId") String customerId);
 }

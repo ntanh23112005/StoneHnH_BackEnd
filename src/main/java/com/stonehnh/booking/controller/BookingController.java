@@ -2,6 +2,7 @@ package com.stonehnh.booking.controller;
 
 import com.stonehnh.booking.dto.request.CreationBookingWrapperDto;
 import com.stonehnh.booking.dto.response.BookingResponseDto;
+import com.stonehnh.booking.dto.response.BookingWithDetailDto;
 import com.stonehnh.booking.service.BookingService;
 import com.stonehnh.common.handler.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;

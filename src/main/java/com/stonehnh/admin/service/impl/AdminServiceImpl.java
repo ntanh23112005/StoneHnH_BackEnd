@@ -1,6 +1,7 @@
 package com.stonehnh.admin.service.impl;
 
 import com.stonehnh.admin.dto.response.BookingStatusDto;
+import com.stonehnh.admin.dto.response.HomestayDto;
 import com.stonehnh.admin.dto.response.MonthlyRevenueDto;
 import com.stonehnh.admin.dto.response.TotalStatsResponseDto;
 import com.stonehnh.admin.mapper.AdminMapper;
@@ -60,5 +61,18 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public List<CustomerResponseDto> getAllCustomersAndRoles() {
         return customerMapper.getAllCustomerAndRoles();
+    }
+
+    @Override
+    public List<HomestayDto> getAllHomestays(int limit, int offset) {
+        return adminMapper.getAllHomestays(limit, offset);
+    }
+
+    @Override
+    public void updateHomestayStatus(String homestayId, boolean status) {
+        int updated = adminMapper.updateHomestayStatus(homestayId, status);
+        if (updated == 0) {
+            throw new IllegalArgumentException("Homestay ID không tồn tại: " + homestayId);
+        }
     }
 }
