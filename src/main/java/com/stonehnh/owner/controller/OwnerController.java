@@ -99,14 +99,15 @@ public class OwnerController {
         return ResponseEntity.ok(bookings);
     }
 
-    @GetMapping("/revenue/monthly/{customerId}")
-    public ResponseEntity<List<MonthlyRevenueOwnerDto>> getMonthlyRevenue(@PathVariable String customerId) {
-        List<MonthlyRevenueOwnerDto> revenue = ownerService.getMonthlyRevenue(customerId);
-        return ResponseEntity.ok(revenue);
+    @GetMapping("/{customerId}/monthly-revenue")
+    public List<MonthlyRevenueOwnerDto> getMonthlyRevenue(
+            @PathVariable String customerId,
+            @RequestParam int year) {
+        return ownerService.getMonthlyRevenue(customerId, year);
     }
 
     @GetMapping("/{customerId}/homestays")
-    public List<OwnerHomestayDto> getOwnedHomestays(@PathVariable String customerId) {
-        return ownerService.getOwnedHomestaysWithImages(customerId);
+    public List<OwnerHomestayDto> getOwnerHomestays(@PathVariable String customerId) {
+        return ownerService.getOwnerHomestays(customerId);
     }
 }

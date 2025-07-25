@@ -5,6 +5,7 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.stonehnh.common.enums.ErrorCode;
+import com.stonehnh.common.exception.AppException;
 import com.stonehnh.common.security.JwtUtil;
 import com.stonehnh.common.service.AuthService;
 import com.stonehnh.customer.dto.request.CreationCustomerDto;
@@ -159,19 +160,26 @@ public class AuthServiceImpl implements AuthService {
     }
 
     private CustomerResponseDto createGoogleUser(String email, String name, String pictureUrl) {
-        CreationCustomerDto newUser = new CreationCustomerDto();
-        newUser.setCustomerId("GOOGLE_ID");
-        newUser.setCustomerName(name);
-        newUser.setEmail(email);
-        newUser.setPhoneNumber("GOOGLE_PHONE_NUMBER");
-        newUser.setPassword("GOOGLE_PASSWORD");
-        newUser.setCustomerAddress("GOOGLE_ADDRESS");
-        newUser.setCreatedDate(new Date());
-        newUser.setCustomerPicture(pictureUrl);
-        newUser.setVerifyStatus(true);
-        newUser.setAccountStatus(true);
+        try {
+            CreationCustomerDto newUser = new CreationCustomerDto();
+            newUser.setCustomerId("GOOGLE_ID");
+            newUser.setCustomerName(name);
+            newUser.setEmail(email);
+            newUser.setPhoneNumber("GOOGLE_PHONE_NUMBER");
+            newUser.setPassword("GOOGLE_PASSWORD");
+            newUser.setCustomerAddress("GOOGLE_ADDRESS");
+            newUser.setCreatedDate(new Date());
+            newUser.setCustomerPicture(pictureUrl);
+            newUser.setVerifyStatus(true);
+            newUser.setAccountStatus(true);
 
-        return customerService.createNewCustomerWithRole(newUser, List.of("R01"));
+            CustomerResponseDto createdCustomer =  customerService.createNewCustomerWithRole(newUser, List.of("R01"));
+            return createdCustomer;
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+
     }
 
     private ResponseCookie createRefreshTokenCookie(String refreshToken) {

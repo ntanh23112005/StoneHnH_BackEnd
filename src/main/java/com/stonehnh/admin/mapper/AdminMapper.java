@@ -1,6 +1,7 @@
 package com.stonehnh.admin.mapper;
 
 import com.stonehnh.admin.dto.response.*;
+import com.stonehnh.homestay.dto.response.HomestayHomePageResponseDto;
 import org.apache.ibatis.annotations.*;
 import com.stonehnh.admin.dto.response.BookingStatusDto;
 import com.stonehnh.admin.dto.response.MonthlyRevenueDto;
@@ -48,45 +49,8 @@ public interface AdminMapper {
     /**
      * Lấy danh sách tất cả homestay kèm thông tin liên quan
      */
-    @Select("""
-        SELECT 
-            homestay_id,
-            homestay_name,
-            country_address,
-            area_address,
-            detail_address,
-            daily_price,
-            hourly_price,
-            type,
-            status,
-            type_style,
-            have_pet,
-            max_customer,
-            number_of_beds,
-            number_of_bathrooms,
-            conveniences,
-            options,
-            entrance_parking,
-            bedroom_details,
-            bathroom_details,
-            support_equipments
-        FROM homestays
-        LIMIT #{limit} OFFSET #{offset}
-    """)
-    @Results({
-            @Result(column = "homestay_id", property = "homestayId"),
-            @Result(property = "images", column = "homestay_id",
-                    many = @Many(select = "getImagesByHomestayId")),
-            @Result(property = "rules", column = "homestay_id",
-                    many = @Many(select = "getRulesByHomestayId")),
-            @Result(property = "owners", column = "homestay_id",
-                    many = @Many(select = "getOwnersByHomestayId")),
-            @Result(property = "reviews", column = "homestay_id",
-                    many = @Many(select = "getReviewsByHomestayId")),
-            @Result(property = "rates", column = "homestay_id",
-                    many = @Many(select = "getRatesByHomestayId"))
-    })
-    List<HomestayDto> getAllHomestays(@Param("limit") int limit, @Param("offset") int offset);
+//    List<HomestayHomePageResponseDto> selectHomestayByAdminFilter(@Param("name") String name, @Param("status") String status, @Param("limit") int limit, @Param("offset") int offset);
+//    long countHomestayByAdminFilter(@Param("name") String name, @Param("status") String status);
 
     // Lấy ảnh
     @Select("""

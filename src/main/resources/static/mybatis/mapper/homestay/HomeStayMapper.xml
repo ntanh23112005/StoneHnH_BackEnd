@@ -22,6 +22,22 @@
         <result property="averageRate" column="average_rate"/>
         <result property="imageList" column="image_list"/>
     </resultMap>
+
+    <resultMap id="HomestayHomePageMapAdmin" type="com.stonehnh.homestay.dto.response.HomestayHomePageAdminResponseDto">
+        <id property="homestayId" column="homestay_id"/>
+        <result property="homestayName" column="homestay_name"/>
+        <result property="areaAddress" column="area_address"/>
+        <result property="dailyPrice" column="daily_price"/>
+        <result property="hourlyPrice" column="hourly_price"/>
+        <result property="type" column="type"/>
+        <result property="status" column="status"/>
+        <result property="typeStyle" column="type_style"/>
+        <result property="maxCustomer" column="max_customer"/>
+        <result property="numberOfBeds" column="number_of_beds"/>
+        <result property="numberOfBathrooms" column="number_of_bathrooms"/>
+        <result property="supportEquipments" column="support_equipments"/>
+        <result property="imageList" column="image_list"/>
+    </resultMap>
     <select id="selectHomestayHomePage" resultMap="HomestayHomePageMap">
         SELECT
         h.homestay_id,
@@ -77,6 +93,69 @@
             </if>
             <if test="maxCustomer != null and maxCustomer != 0">
                 AND h.max_customer &gt;= #{maxCustomer}
+            </if>
+        </where>
+    </select>
+
+    <!-- Admin - Lấy danh sách homestay với phân trang, tìm theo tên và trạng thái -->
+    <select id="selectHomestayByAdminFilter" resultMap="HomestayHomePageMapAdmin">
+        SELECT
+        h.homestay_id,
+        h.homestay_name,
+        h.area_address,
+        h.daily_price,
+        h.hourly_price,
+        h.type,
+        h.status,
+        h.type_style,
+        h.max_customer,
+        h.number_of_beds,
+        h.number_of_bathrooms,
+        h.support_equipments,
+
+        (SELECT hi.homestay_image
+        FROM homestay_images hi
+        WHERE hi.homestay_id = h.homestay_id
+        AND hi.image_for = 'represent'
+        LIMIT 1) AS image_list
+
+        FROM homestays h
+        <where>
+            1 = 1
+            <if test="name != null and name != ''">
+                AND LOWER(h.homestay_name) LIKE CONCAT('%', LOWER(#{name}), '%')
+            </if>
+            <if test="status != null and status != 'all'">
+                <choose>
+                    <when test="status eq 'approved'">
+                        AND h.status = TRUE
+                    </when>
+                    <otherwise>
+                        AND h.status = FALSE
+                    </otherwise>
+                </choose>
+            </if>
+        </where>
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <!-- Admin - Đếm tổng số homestay phù hợp điều kiện -->
+    <select id="countHomestayByAdminFilter" resultType="int">
+        SELECT COUNT(*) FROM homestays h
+        <where>
+            1 = 1
+            <if test="name != null and name != ''">
+                AND LOWER(h.homestay_name) LIKE CONCAT('%', LOWER(#{name}), '%')
+            </if>
+            <if test="status != null and status != 'all'">
+                <choose>
+                    <when test="status eq 'approved'">
+                        AND h.status = TRUE
+                    </when>
+                    <otherwise>
+                        AND h.status = FALSE
+                    </otherwise>
+                </choose>
             </if>
         </where>
     </select>

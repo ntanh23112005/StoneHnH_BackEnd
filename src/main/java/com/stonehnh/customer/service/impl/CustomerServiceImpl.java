@@ -68,12 +68,6 @@ public class CustomerServiceImpl implements CustomerService {
             throw new AppException(ErrorCode.EMAIL_ALREADY_EXISTS);
         }
 
-        // Kiểm tra số điện thoại tồn tại
-        if (dto.getPhoneNumber() != null && !dto.getPhoneNumber().isEmpty()) {
-            if (customerMapper.existsByPhoneNumber(dto.getPhoneNumber())) {
-                throw new AppException(ErrorCode.PHONE_NUMBER_ALREADY_EXISTS);
-            }
-        }
         // Tạo customer entity
         Customer customer = CustomerConverter.toEntity(dto);
         customer.setCustomerId(UUID.randomUUID().toString());

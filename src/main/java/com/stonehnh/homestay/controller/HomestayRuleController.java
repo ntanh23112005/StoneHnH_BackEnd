@@ -35,7 +35,9 @@ public class HomestayRuleController {
      * @return Thông tin quy tắc đã tạo
      */
     @PostMapping
-    public ApiResponse<Object> createNewHomestayRule(CreationHomestayRulesDto creationHomestayRulesDto) {
+    public ApiResponse<Object> createNewHomestayRule(
+            @RequestBody CreationHomestayRulesDto creationHomestayRulesDto
+    ) {
         return ApiResponse.builder()
                 .success(true)
                 .message("Tạo quy tắc thành công")
@@ -49,7 +51,10 @@ public class HomestayRuleController {
      * @return Thông tin quy tắc đã cập nhật
      */
     @PutMapping("/{id}")
-    public ApiResponse<Object> updateHomestayRule(int id, CreationHomestayRulesDto creationHomestayRulesDto) {
+    public ApiResponse<Object> updateHomestayRule(
+            @PathVariable("id") int id,
+            @RequestBody CreationHomestayRulesDto creationHomestayRulesDto
+    ) {
         return ApiResponse.builder()
                 .success(true)
                 .message("Cập nhật quy tắc thành công")
@@ -84,4 +89,14 @@ public class HomestayRuleController {
                 .data(homestayRulesService.findRuleById(Integer.parseInt(ruleId)))
                 .build();
     }
+
+    @GetMapping("/by-homestay/{homestayId}")
+    public ApiResponse<Object> getHomestayRuleByHomestayId(@PathVariable("homestayId") String homestayId) {
+        return ApiResponse.builder()
+                .success(true)
+                .message("Lấy quy tắc theo homestayId thành công")
+                .data(homestayRulesService.findRuleByHomestayId(homestayId))
+                .build();
+    }
+
 }

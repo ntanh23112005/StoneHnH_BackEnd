@@ -169,32 +169,35 @@ public interface OwnerMapper {
     @Select("""
         SELECT DISTINCT
             b.booking_id,
-            b.customer_id,
             b.total_price,
-            b.payment_status
-        FROM
-            owners o
-            JOIN booking_details bd ON o.homestay_id = bd.homestay_id
-            JOIN bookings b ON bd.booking_id = b.booking_id
-        WHERE
-            o.customer_id = #{customerId}
+            b.payment_status,
+            c.customer_name
+        FROM owners o
+        JOIN booking_details bd ON o.homestay_id = bd.homestay_id
+        JOIN bookings b ON bd.booking_id = b.booking_id
+        JOIN customers c ON b.customer_id = c.customer_id
+        WHERE o.customer_id = #{customerId}
     """)
     List<OwnerBookingDto> getAllBookingsByOwner(@Param("customerId") String customerId);
 
     @Select("""
-    SELECT 
-        MONTH(bd.check_out_time) AS month,
-        IFNULL(SUM(b.total_price), 0) AS revenue
-    FROM owners o
-    JOIN booking_details bd ON o.homestay_id = bd.homestay_id
-    JOIN bookings b ON bd.booking_id = b.booking_id
-    JOIN payments p ON b.booking_id = p.booking_id
-    WHERE o.customer_id = #{customerId}
-      AND p.status = 1
-    GROUP BY MONTH(bd.check_out_time)
-    ORDER BY month
-""")
-    List<MonthlyRevenueOwnerDto> getMonthlyRevenue(@Param("customerId") String customerId);
+        SELECT 
+            MONTH(bd.check_out_time) AS month,
+            IFNULL(SUM(b.total_price), 0) AS revenue
+        FROM owners o
+        JOIN booking_details bd ON o.homestay_id = bd.homestay_id
+        JOIN bookings b ON bd.booking_id = b.booking_id
+        JOIN payments p ON b.booking_id = p.booking_id
+        WHERE o.customer_id = #{customerId}
+          AND p.status = 1
+          AND YEAR(bd.check_out_time) = #{year}
+        GROUP BY MONTH(bd.check_out_time)
+        ORDER BY month
+    """)
+    List<MonthlyRevenueOwnerDto> getMonthlyRevenue(
+            @Param("customerId") String customerId,
+            @Param("year") int year
+    );
 
     @Select("""
     SELECT 
@@ -217,13 +220,19 @@ public interface OwnerMapper {
         h.entrance_parking,
         h.bedroom_details,
         h.bathroom_details,
-        h.support_equipments,
-        hi.homestay_image,
-        hi.image_for
+        h.support_equipments
     FROM owners o
     JOIN homestays h ON o.homestay_id = h.homestay_id
-    LEFT JOIN homestay_images hi ON h.homestay_id = hi.homestay_id
     WHERE o.customer_id = #{customerId}
 """)
-    List<OwnerHomestayDto> getOwnedHomestaysWithImages(@Param("customerId") String customerId);
+    List<OwnerHomestayDto> getHomestaysByOwner(@Param("customerId") String customerId);
+
+    @Select("""
+    SELECT homestay_id, homestay_image, image_for
+    FROM homestay_images
+    WHERE homestay_id IN (
+        SELECT homestay_id FROM owners WHERE customer_id = #{customerId}
+    )
+""")
+    List<HomestayImageDtoXP> getImagesForOwnerHomestays(@Param("customerId") String customerId);
 }

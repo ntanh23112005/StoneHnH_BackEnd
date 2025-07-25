@@ -63,4 +63,6 @@ public interface BookingService {
     Double getTotalPaymentStatus();
 
     List<BookingWithDetailDto> getAllBookingsWithDetails();
+
+    int updatePaymentStatus(String bookingId, int paymentStatus);
 }

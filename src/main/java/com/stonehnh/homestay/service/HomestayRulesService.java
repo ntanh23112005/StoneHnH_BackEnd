@@ -1,6 +1,8 @@
 package com.stonehnh.homestay.service;
 
+import com.stonehnh.admin.dto.response.HomestayRuleDto;
 import com.stonehnh.homestay.dto.request.CreationHomestayRulesDto;
+import com.stonehnh.homestay.dto.response.HomestayRuleDtoXP;
 import com.stonehnh.homestay.dto.response.HomestayRulesResponseDto;
 
 import java.util.List;
@@ -47,4 +49,6 @@ public interface HomestayRulesService {
      * @return HomestayRuleDto
      */
     HomestayRulesResponseDto findRuleById(int id);
+
+    HomestayRuleDtoXP findRuleByHomestayId(String homestayId);
 }

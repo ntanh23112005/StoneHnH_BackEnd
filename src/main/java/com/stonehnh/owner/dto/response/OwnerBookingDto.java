@@ -12,4 +12,5 @@ public class OwnerBookingDto {
     private String customerId;
     private Double totalPrice;
     private Integer paymentStatus;
+    private String customerName;
 }
