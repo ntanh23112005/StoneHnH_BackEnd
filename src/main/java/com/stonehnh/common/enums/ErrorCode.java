@@ -42,10 +42,12 @@ public enum ErrorCode {
     // ===== Đặt phòng =====
     BOOKING_CREATE_FAILED("4101", "Không thể tạo đặt phòng."),
     BOOKING_NOT_FOUND("4401", "Không tìm thấy thông tin đặt phòng."),
+    BOOKING_UPDATE_FAILED("4403", "Lỗi khi cập nhật Booking"),
 
     // ===== Thanh toán =====
     PAYMENT_NOT_FOUND("5401", "Không tìm thấy thanh toán."),
     PAYMENT_FAILED("5101", "Thanh toán thất bại."),
+    PAYMENT_CREATE_FAILED("5102", "Lỗi khi tạo mới thanh toán."),
 
     // ===== Đánh giá & nhận xét =====
     REVIEW_NOT_FOUND("6401", "Không tìm thấy đánh giá."),

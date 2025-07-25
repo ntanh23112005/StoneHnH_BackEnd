@@ -67,6 +67,7 @@ public class PaymentController {
      */
     @PostMapping
     public ApiResponse<?> createPayment(@RequestBody CreationPaymentDto request) {
+        System.out.println(">>> CREATE PAYMENT DTO: " + request);
         return paymentService.createPayment(request);
     }
 
