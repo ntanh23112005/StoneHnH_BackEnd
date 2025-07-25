@@ -3,6 +3,7 @@ package com.stonehnh.payment.controller;
 import com.stonehnh.common.handler.ApiResponse; // Assuming this class is available
 import com.stonehnh.payment.dto.request.CreationPaymentDto;
 import com.stonehnh.payment.dto.response.PaymentResponseDto;
+import com.stonehnh.payment.dto.response.PaymentWithDetailDto;
 import com.stonehnh.payment.service.PaymentService;
 import org.springframework.web.bind.annotation.*;
 
@@ -65,13 +66,8 @@ public class PaymentController {
      * @return ApiResponse chứa số dòng bị ảnh hưởng
      */
     @PostMapping
-    public ApiResponse<Object> createPayment(@RequestBody CreationPaymentDto request) {
-        int rowsAffected = paymentService.createPayment(request);
-        return ApiResponse.builder()
-                .success(true)
-                .message("Tạo thanh toán mới thành công.")
-                .data(rowsAffected)
-                .build();
+    public ApiResponse<?> createPayment(@RequestBody CreationPaymentDto request) {
+        return paymentService.createPayment(request);
     }
 
     /**
@@ -121,5 +117,15 @@ public class PaymentController {
                     .data(0)
                     .build();
         }
+    }
+
+    @GetMapping("/by-customer/{customerId}")
+    public ApiResponse<Object> getPaymentsByCustomerId(@PathVariable String customerId) {
+        List<PaymentWithDetailDto> result = paymentService.findPaymentsByCustomerId(customerId);
+        return ApiResponse.builder()
+                .success(true)
+                .message("Lấy danh sách thanh toán theo khách hàng thành công.")
+                .data(result)
+                .build();
     }
 }

@@ -19,7 +19,13 @@ import com.stonehnh.customer.entity.Customer;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -82,7 +88,8 @@ public class BookingServiceImpl implements BookingService {
             // TODO: Xử lý theo nghiệp vụ
             throw new AppException(ErrorCode.BOOKING_NOT_FOUND);
         }
-        return bookingMapper.deleteBoooking(bookingId);
+        System.out.println(bookingId);
+        return bookingMapper.deleteBooking(bookingId);
     }
 
     @Override
@@ -103,8 +110,9 @@ public class BookingServiceImpl implements BookingService {
     @Transactional
     public ApiResponse<?> createBookingWithDetail(CreationBookingDto creationBookingDto, CreationBookingDetailDto creationBookingDetailDto) {
         // Insert Booking
-        String bookingId = UUID.randomUUID().toString();
+        String bookingId = generateBookingId();
         creationBookingDto.setBookingId(bookingId);
+        creationBookingDto.setPaymentStatus(3);
         int bookingResult = bookingMapper.insertBooking(BookingConverter.toEntity(creationBookingDto));
         if (bookingResult <= 0) {
             return ApiResponse.builder()
@@ -127,10 +135,14 @@ public class BookingServiceImpl implements BookingService {
 
         // Thành công
         BookingDetail createdDetail = bookingDetailMapper.findBookingDetailById(creationBookingDetailDto.getId());
+        Map<String, Object> responseData = new HashMap<>();
+        responseData.put("bookingId", bookingId);
+        responseData.put("bookingDetail", createdDetail);
+
         return ApiResponse.builder()
                 .success(true)
                 .message("Tạo booking thành công")
-                .data(createdDetail)
+                .data(responseData)
                 .build();
     }
 
@@ -153,4 +165,11 @@ public class BookingServiceImpl implements BookingService {
     public int updatePaymentStatus(String bookingId, int paymentStatus) {
         return bookingMapper.updatePaymentStatus(bookingId, paymentStatus);
     }
+
+    private String generateBookingId() {
+        String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        int count = bookingMapper.countBookings() + 1;
+        return String.format("BK-%s-%03d", date, count);
+    }
+
 }

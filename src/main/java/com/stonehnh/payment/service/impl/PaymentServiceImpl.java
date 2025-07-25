@@ -1,8 +1,11 @@
 package com.stonehnh.payment.service.impl;
 
+import com.stonehnh.booking.mapper.BookingMapper;
+import com.stonehnh.common.handler.ApiResponse;
 import com.stonehnh.payment.converter.PaymentConverter;
 import com.stonehnh.payment.dto.request.CreationPaymentDto; // Giả sử có
 import com.stonehnh.payment.dto.response.PaymentResponseDto; // Giả sử có
+import com.stonehnh.payment.dto.response.PaymentWithDetailDto;
 import com.stonehnh.payment.entity.Payment;
 import com.stonehnh.common.enums.ErrorCode;
 import com.stonehnh.common.exception.AppException;
@@ -19,9 +22,11 @@ import java.util.UUID;
 public class PaymentServiceImpl implements PaymentService {
 
     private final PaymentMapper paymentMapper;
+    private final BookingMapper bookingMapper;
 
-    public PaymentServiceImpl(PaymentMapper paymentMapper) {
+    public PaymentServiceImpl(PaymentMapper paymentMapper, BookingMapper bookingMapper) {
         this.paymentMapper = paymentMapper;
+        this.bookingMapper = bookingMapper;
     }
 
     @Override
@@ -37,16 +42,36 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     @Transactional
-    public int createPayment(CreationPaymentDto dto) {
+    public ApiResponse<?> createPayment(CreationPaymentDto dto) {
         try {
             Payment payment = PaymentConverter.toEntity(dto);
             payment.setPaymentId(UUID.randomUUID().toString());
-            return paymentMapper.insertPayment(payment);
+
+            int result = paymentMapper.insertPayment(payment);
+
+            if (result > 0) {
+                int updateBooking = bookingMapper.updatePaymentStatus(dto.getBookingId(), 1); // 1 = đã thanh toán
+
+                if (updateBooking <= 0) {
+                    throw new AppException();
+                }
+
+                return ApiResponse.builder()
+                        .success(true)
+                        .message("Tạo thanh toán mới thành công.")
+                        .data(result) // hoặc data = paymentId nếu bạn cần
+                        .build();
+            } else {
+                return ApiResponse.builder()
+                        .success(false)
+                        .message("Tạo thanh toán thất bại.")
+                        .data(null)
+                        .build();
+            }
         } catch (Exception e) {
-            throw new RuntimeException(ErrorCode.PAYMENT_FAILED.getMessage(), e);
+            throw new AppException();
         }
     }
-
 
     @Override
     @Transactional
@@ -75,5 +100,12 @@ public class PaymentServiceImpl implements PaymentService {
                 .map(PaymentConverter::toDto)
                 .orElseThrow(() -> new AppException(ErrorCode.PAYMENT_NOT_FOUND));
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<PaymentWithDetailDto> findPaymentsByCustomerId(String customerId) {
+        return paymentMapper.findPaymentsByCustomerId(customerId);
+    }
+
 
 }

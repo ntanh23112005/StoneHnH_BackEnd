@@ -50,9 +50,8 @@ public interface BookingMapper {
      * @param bookingId: Mã id của booking cần xóa
      * @return Số dòng bị ảnh hưởng
      */
-    @Delete("DELETE FROM bookings" +
-            "WHERE booking_id = #{bookingId}")
-    int deleteBoooking(@Param("bookingId") String bookingId);
+    @Delete("DELETE FROM bookings WHERE booking_id = #{bookingId}")
+    int deleteBooking(@Param("bookingId") String bookingId);
 
     /**
      * Lấy thông tin booking theo ID
@@ -74,7 +73,7 @@ public interface BookingMapper {
      * @param bookingId Mã booking cần kiểm tra
      * @return true nếu tồn tại, false nếu không
      */
-    @Select("SELECT COUNT(*) > 0 FROM bookings WHERE bookingId = #{bookingId}")
+    @Select("SELECT COUNT(*) > 0 FROM bookings WHERE booking_id = #{bookingId}")
     boolean isExistedBookingById(@Param("bookingId") String bookingId);
 
     /**
