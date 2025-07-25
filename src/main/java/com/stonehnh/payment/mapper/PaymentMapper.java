@@ -1,5 +1,6 @@
 package com.stonehnh.payment.mapper;
 
+import com.stonehnh.payment.dto.response.PaymentWithDetailDto;
 import com.stonehnh.payment.entity.Payment;
 import org.apache.ibatis.annotations.*;
 
@@ -89,4 +90,29 @@ public interface PaymentMapper {
      */
     @Select("SELECT COUNT(1) FROM Payment WHERE paymentId = #{paymentId}")
     boolean isExistedPaymentById(@Param("paymentId") String paymentId);
+
+    @Select("""
+    SELECT 
+        b.booking_id,
+        bd.booking_time AS created_time,
+        b.payment_status AS status,
+        b.total_price,
+
+        bd.homestay_id,
+        bd.booking_time,
+        bd.check_in_time,
+        bd.check_out_time,
+        bd.number_of_customers,
+        bd.number_of_pets,
+
+        h.homestay_name
+
+    FROM bookings b
+    JOIN booking_details bd ON b.booking_id = bd.booking_id
+    JOIN homestays h ON bd.homestay_id = h.homestay_id
+    WHERE b.customer_id = #{customerId}
+""")
+    List<PaymentWithDetailDto> findPaymentsByCustomerId(@Param("customerId") String customerId);
+
+
 }
