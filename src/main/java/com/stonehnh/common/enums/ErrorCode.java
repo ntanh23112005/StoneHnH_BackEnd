@@ -29,6 +29,7 @@ public enum ErrorCode {
     // ===== Hình ảnh Homestay =====
     HOMESTAY_IMAGE_NOT_FOUND("3403", "Không tìm thấy hình ảnh homestay."),
     HOMESTAY_IMAGE_UPLOAD_FAILED("3102", "Tải ảnh homestay thất bại."),
+    FILE_IO_ERROR("3108", "Tệp tin không hợp lệ. Vui lòng kiểm tra định dạng, dung lượng và nội dung tệp."),
 
     // ===== Luật Homestay =====
     HOMESTAY_RULE_NOT_FOUND("3404", "Không tìm thấy quy định homestay."),

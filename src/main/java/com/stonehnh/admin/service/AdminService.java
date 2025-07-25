@@ -4,7 +4,10 @@ import com.stonehnh.admin.dto.response.BookingStatusDto;
 import com.stonehnh.admin.dto.response.HomestayDto;
 import com.stonehnh.admin.dto.response.MonthlyRevenueDto;
 import com.stonehnh.admin.dto.response.TotalStatsResponseDto;
+import com.stonehnh.common.dto.PageDTO;
 import com.stonehnh.customer.dto.response.CustomerResponseDto;
+import com.stonehnh.homestay.dto.response.HomestayHomePageAdminResponseDto;
+import com.stonehnh.homestay.dto.response.HomestayHomePageResponseDto;
 
 import java.util.List;
 
@@ -29,12 +32,12 @@ public interface AdminService {
 
     List<CustomerResponseDto> getAllCustomersAndRoles();
 
-    List<HomestayDto> getAllHomestays(int limit, int offset);
-
     /**
      * Cập nhật trạng thái homestay
      * @param homestayId id homestay
      * @param status trạng thái mới
      */
     void updateHomestayStatus(String homestayId, boolean status);
+
+    PageDTO<HomestayHomePageAdminResponseDto> getHomestays(int page, int size, String name, String status);
 }

@@ -2,6 +2,8 @@ package com.stonehnh.owner.dto.response;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class OwnerHomestayDto {
     private String homestayId;
@@ -24,6 +26,5 @@ public class OwnerHomestayDto {
     private String bedroomDetails;
     private String bathroomDetails;
     private String supportEquipments;
-    private String homestayImage;
-    private String imageFor;
+    private List<String> images;
 }

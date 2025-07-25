@@ -7,7 +7,6 @@ import com.stonehnh.homestay.dto.response.HomestayHomePageResponseDto;
 import com.stonehnh.homestay.dto.response.HomestayResponseDto;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface HomestayService {
 
@@ -19,10 +18,11 @@ public interface HomestayService {
 
     /**
      * Tạo mới một homestay
+     *
      * @param homestayDto dữ liệu homestay từ frontend
      * @return Số dòng bị ảnh hưởng
      */
-    int createHomestay(CreationHomestayDto homestayDto);
+    String createHomestay(CreationHomestayDto homestayDto);
 
     /**
      * Cập nhật homestay theo ID

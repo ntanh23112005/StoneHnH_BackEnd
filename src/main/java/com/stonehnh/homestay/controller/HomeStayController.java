@@ -8,6 +8,7 @@ import com.stonehnh.homestay.service.HomestayService;
 
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -33,16 +34,20 @@ public class HomeStayController {
 //    }
 
     @PostMapping
-    public ApiResponse<Object> createNewHomeStay(CreationHomestayDto creationHomestayDto){
+    public ApiResponse<Object> createNewHomeStay(@RequestBody CreationHomestayDto creationHomestayDto){
+        String homestayId = homestayService.createHomestay(creationHomestayDto);
         return ApiResponse.builder()
                 .success(true)
                 .message("Tạo 1 homestay thành công")
-                .data(homestayService.createHomestay(creationHomestayDto))
+                .data(Map.of("homestayId", homestayId))
                 .build();
     }
 
     @PutMapping
-    public ApiResponse<Object> updateHomestay(String homestayId, CreationHomestayDto creationHomestayDto){
+    public ApiResponse<Object> updateHomestay(
+            @RequestParam("homestayId") String homestayId,
+            @RequestBody CreationHomestayDto creationHomestayDto
+    ) {
         return ApiResponse.builder()
                 .success(true)
                 .message("Update 1 homestay thành công")

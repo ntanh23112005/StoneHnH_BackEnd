@@ -1,15 +1,18 @@
 package com.stonehnh.admin.service.impl;
 
 import com.stonehnh.admin.dto.response.BookingStatusDto;
-import com.stonehnh.admin.dto.response.HomestayDto;
 import com.stonehnh.admin.dto.response.MonthlyRevenueDto;
 import com.stonehnh.admin.dto.response.TotalStatsResponseDto;
 import com.stonehnh.admin.mapper.AdminMapper;
 import com.stonehnh.admin.service.AdminService;
 import com.stonehnh.booking.service.BookingService;
+import com.stonehnh.common.dto.PageDTO;
 import com.stonehnh.customer.dto.response.CustomerResponseDto;
 import com.stonehnh.customer.mapper.CustomerMapper;
 import com.stonehnh.customer.service.CustomerService;
+import com.stonehnh.homestay.dto.response.HomestayHomePageAdminResponseDto;
+import com.stonehnh.homestay.dto.response.HomestayHomePageResponseDto;
+import com.stonehnh.homestay.mapper.HomestayMapper;
 import com.stonehnh.homestay.service.HomestayService;
 import org.springframework.stereotype.Service;
 
@@ -24,13 +27,15 @@ public class AdminServiceImpl implements AdminService {
     private final HomestayService homestayService;
     private final AdminMapper adminMapper;
     private final CustomerMapper customerMapper;
+    private final HomestayMapper homestayMapper;
 
-    public AdminServiceImpl(BookingService bookingService, CustomerService customerService, HomestayService homestayService, AdminMapper adminMapper, CustomerMapper customerMapper) {
+    public AdminServiceImpl(BookingService bookingService, CustomerService customerService, HomestayService homestayService, AdminMapper adminMapper, CustomerMapper customerMapper, HomestayMapper homestayMapper) {
         this.bookingService = bookingService;
         this.customerService = customerService;
         this.homestayService = homestayService;
         this.adminMapper = adminMapper;
         this.customerMapper = customerMapper;
+        this.homestayMapper = homestayMapper;
     }
 
     @Override
@@ -64,8 +69,14 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public List<HomestayDto> getAllHomestays(int limit, int offset) {
-        return adminMapper.getAllHomestays(limit, offset);
+    public PageDTO<HomestayHomePageAdminResponseDto> getHomestays(int page, int size, String name, String status) {
+        int offset = (page - 1) * size;
+
+        List<HomestayHomePageAdminResponseDto> list = homestayMapper.selectHomestayByAdminFilter(name, status, size, offset);
+        long total = homestayMapper.countHomestayByAdminFilter(name, status);
+        int totalPages = (int) Math.ceil((double) total / size);
+
+        return new PageDTO<HomestayHomePageAdminResponseDto>(page, size, total, totalPages, list);
     }
 
     @Override

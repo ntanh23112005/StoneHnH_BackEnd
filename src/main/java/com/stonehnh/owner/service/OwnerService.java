@@ -56,8 +56,8 @@ public interface OwnerService {
 
     List<OwnerBookingDto> getAllBookings(String customerId);
 
-    List<MonthlyRevenueOwnerDto> getMonthlyRevenue(String customerId);
+    List<MonthlyRevenueOwnerDto> getMonthlyRevenue(String customerId, Integer year);
 
-    List<OwnerHomestayDto> getOwnedHomestaysWithImages(String customerId);
+    List<OwnerHomestayDto> getOwnerHomestays(String customerId);
 
 }

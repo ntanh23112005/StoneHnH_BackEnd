@@ -4,11 +4,14 @@ import com.stonehnh.admin.dto.response.HomestayDto;
 import com.stonehnh.admin.service.AdminService;
 import com.stonehnh.booking.dto.response.BookingWithDetailDto;
 import com.stonehnh.booking.service.BookingService;
+import com.stonehnh.common.dto.PageDTO;
 import com.stonehnh.common.handler.ApiResponse;
 import com.stonehnh.customer.dto.request.CreationCustomerWithRoles;
 import com.stonehnh.customer.dto.response.CustomerResponseDto;
 import com.stonehnh.customer.mapper.CustomerMapper;
 import com.stonehnh.customer.service.CustomerService;
+import com.stonehnh.homestay.dto.response.HomestayHomePageAdminResponseDto;
+import com.stonehnh.homestay.dto.response.HomestayHomePageResponseDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -116,15 +119,18 @@ public class AdminController {
     }
 
     @GetMapping("/homestays")
-    public ApiResponse<Object> getAllHomestays(
-            @RequestParam(defaultValue = "10") int limit,
-            @RequestParam(defaultValue = "0") int offset) {
-        List<HomestayDto> homestayList = adminService.getAllHomestays(limit, offset);
-        return ApiResponse.builder()
+    public ResponseEntity<?> getHomestays(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "8") int size,
+            @RequestParam(required = false, defaultValue = "") String name,
+            @RequestParam(required = false, defaultValue = "all") String status
+    ) {
+        PageDTO<HomestayHomePageAdminResponseDto> response = adminService.getHomestays(page, size, name, status);
+        return ResponseEntity.ok().body(ApiResponse.<PageDTO<HomestayHomePageAdminResponseDto>>builder()
                 .success(true)
                 .message("Lấy danh sách homestay thành công")
-                .data(homestayList)
-                .build();
+                .data(response)
+                .build());
     }
 
     @PutMapping("/homestays/{homestayId}/status")

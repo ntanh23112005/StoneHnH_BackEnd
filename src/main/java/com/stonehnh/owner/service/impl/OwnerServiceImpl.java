@@ -12,7 +12,10 @@ import com.stonehnh.owner.service.OwnerService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class OwnerServiceImpl implements OwnerService {
@@ -86,12 +89,25 @@ public class OwnerServiceImpl implements OwnerService {
     }
 
     @Override
-    public List<MonthlyRevenueOwnerDto> getMonthlyRevenue(String customerId) {
-        return ownerMapper.getMonthlyRevenue(customerId);
+    public List<MonthlyRevenueOwnerDto> getMonthlyRevenue(String customerId, Integer year) {
+        return ownerMapper.getMonthlyRevenue(customerId, year);
     }
 
     @Override
-    public List<OwnerHomestayDto> getOwnedHomestaysWithImages(String customerId) {
-        return ownerMapper.getOwnedHomestaysWithImages(customerId);
+    public List<OwnerHomestayDto> getOwnerHomestays(String customerId) {
+        List<OwnerHomestayDto> homestays = ownerMapper.getHomestaysByOwner(customerId);
+        List<HomestayImageDtoXP> images = ownerMapper.getImagesForOwnerHomestays(customerId);
+
+        Map<String, List<String>> imageMap = images.stream()
+                .collect(Collectors.groupingBy(
+                        HomestayImageDtoXP::getHomestayId,
+                        Collectors.mapping(HomestayImageDtoXP::getHomestayImage, Collectors.toList())
+                ));
+
+        for (OwnerHomestayDto dto : homestays) {
+            dto.setImages(imageMap.getOrDefault(dto.getHomestayId(), Collections.emptyList()));
+        }
+
+        return homestays;
     }
 }

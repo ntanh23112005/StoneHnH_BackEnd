@@ -26,6 +26,11 @@ spring:
           starttls:
             enable: true
 
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+
 mybatis:
   type-aliases-package: com.stonehnh  # Đặt alias ngắn cho entity, ví dụ: Customer thay vì com.stonehnh.customer.entity.Customer
   mapper-locations: classpath:/static/mybatis/mapper/**/*.xml  # Nơi chứa các file XML mapper phức tạp (classpath là folder /resources)

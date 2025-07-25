@@ -2,6 +2,7 @@ package com.stonehnh.homestay.service.impl;
 
 import com.stonehnh.homestay.converter.HomestayRulesConverter;
 import com.stonehnh.homestay.dto.request.CreationHomestayRulesDto;
+import com.stonehnh.homestay.dto.response.HomestayRuleDtoXP;
 import com.stonehnh.homestay.dto.response.HomestayRulesResponseDto;
 import com.stonehnh.homestay.entity.HomestayRule;
 import com.stonehnh.common.enums.ErrorCode;
@@ -10,8 +11,6 @@ import com.stonehnh.homestay.service.HomestayRulesService;
 import com.stonehnh.homestay.mapper.HomestayRulesMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 public class HomestayRulesServiceImpl implements HomestayRulesService {
@@ -137,4 +136,30 @@ public class HomestayRulesServiceImpl implements HomestayRulesService {
             throw new AppException(ErrorCode.SYSTEM_ERROR);
         }
     }
+
+    @Override
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
+    public HomestayRuleDtoXP findRuleByHomestayId(String homestayId) {
+        try {
+            HomestayRule rule = homestayRulesMapper.findRulesByHomestayId(homestayId);
+            if (rule == null) {
+                throw new AppException(ErrorCode.HOMESTAY_RULE_NOT_FOUND);
+            }
+
+            return HomestayRuleDtoXP.builder()
+                    .id(rule.getId())
+                    .homestayId(rule.getHomestayId())
+                    .ruleText(rule.getRuleText())
+                    .policyText(rule.getPolicyText())
+                    .build();
+
+        } catch (AppException e) {
+            throw e;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new AppException(ErrorCode.SYSTEM_ERROR);
+        }
+    }
+
 }

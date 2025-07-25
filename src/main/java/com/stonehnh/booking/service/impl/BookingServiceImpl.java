@@ -148,4 +148,9 @@ public class BookingServiceImpl implements BookingService {
     public List<BookingWithDetailDto> getAllBookingsWithDetails() {
         return bookingMapper.findAllBookingsWithDetails();
     }
+
+    @Override
+    public int updatePaymentStatus(String bookingId, int paymentStatus) {
+        return bookingMapper.updatePaymentStatus(bookingId, paymentStatus);
+    }
 }

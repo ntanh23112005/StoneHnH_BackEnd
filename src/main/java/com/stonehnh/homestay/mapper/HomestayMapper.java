@@ -1,5 +1,6 @@
 package com.stonehnh.homestay.mapper;
 
+import com.stonehnh.homestay.dto.response.HomestayHomePageAdminResponseDto;
 import com.stonehnh.homestay.dto.response.HomestayHomePageResponseDto;
 import com.stonehnh.homestay.entity.Homestay;
 import org.apache.ibatis.annotations.*;
@@ -120,4 +121,8 @@ public interface HomestayMapper {
      */
     @Select("SELECT COUNT(*) FROM homestays")
     int countHomestays();
+
+    List<HomestayHomePageAdminResponseDto> selectHomestayByAdminFilter(@Param("name") String name, @Param("status") String status, @Param("limit") int limit, @Param("offset") int offset);
+
+    int countHomestayByAdminFilter(@Param("name") String name, @Param("status") String status);
 }

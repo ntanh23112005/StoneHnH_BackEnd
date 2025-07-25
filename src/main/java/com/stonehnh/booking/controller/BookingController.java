@@ -76,4 +76,14 @@ public class BookingController {
                 )
         );
     }
+
+    @PatchMapping("/{id}/accept-payment")
+    public ApiResponse<Object> acceptPayment(@PathVariable String id) {
+        int result = bookingService.updatePaymentStatus(id, 1);
+        return ApiResponse.builder()
+                .success(result > 0)
+                .message(result > 0 ? "Đã chấp nhận đơn hàng." : "Không tìm thấy booking.")
+                .data(result)
+                .build();
+    }
 }

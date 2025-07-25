@@ -21,7 +21,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -122,7 +121,7 @@ public class HomestayServiceImpl implements HomestayService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public int createHomestay(CreationHomestayDto homestayDto) {
+    public String createHomestay(CreationHomestayDto homestayDto) {
         try {
             Homestay homestay = HomestayConverter.toEntity(homestayDto);
             homestay.setHomestayId(UUID.randomUUID().toString());
@@ -132,7 +131,7 @@ public class HomestayServiceImpl implements HomestayService {
                 throw new AppException(ErrorCode.HOMESTAY_CREATE_FAILED);
             }
 
-            return rowsAffected;
+            return homestay.getHomestayId();
 
         } catch (AppException e) {
             throw e;

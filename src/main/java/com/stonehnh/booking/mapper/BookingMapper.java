@@ -105,4 +105,7 @@ public interface BookingMapper {
     LEFT JOIN homestays h ON bd.homestay_id = h.homestay_id
     """)
     List<BookingWithDetailDto> findAllBookingsWithDetails();
+
+    @Update("UPDATE bookings SET payment_status = #{paymentStatus} WHERE booking_id = #{bookingId}")
+    int updatePaymentStatus(@Param("bookingId") String bookingId, @Param("paymentStatus") int paymentStatus);
 }

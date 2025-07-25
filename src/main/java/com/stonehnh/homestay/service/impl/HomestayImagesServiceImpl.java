@@ -11,7 +11,14 @@ import com.stonehnh.homestay.mapper.HomestayImagesMapper;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -19,77 +26,134 @@ public class HomestayImagesServiceImpl implements HomestayImageService {
 
     private final HomestayImagesMapper homestayImagesMapper;
 
+    // Đường dẫn gốc
+    private static final String IMAGE_BASE_PATH = "src/main/resources/static/images/HomeStay";
+
     public HomestayImagesServiceImpl(HomestayImagesMapper homestayImagesMapper) {
         this.homestayImagesMapper = homestayImagesMapper;
-    }
-
-    @Override
-    @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public List<HomestayImagesResponseDto> getImagesByHomestayId(String homestayId) {
-        try {
-            List<HomestayImages> images = homestayImagesMapper.findImagesByHomestayId(homestayId);
-
-            // Optional: Nếu muốn báo lỗi khi không có ảnh
-            // if (images == null || images.isEmpty()) {
-            //     throw new AppException(ErrorCode.HOMESTAY_IMAGE_NOT_FOUND);
-            // }
-
-            return HomestayImagesConverter.toDtoList(images);
-
-        } catch (AppException e) {
-            throw e;
-
-        } catch (Exception e) {
-            e.printStackTrace(); // hoặc log.error("Lỗi khi lấy ảnh homestay", e);
-            throw new AppException(ErrorCode.SYSTEM_ERROR);
-        }
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public int createImage(CreationHomestayImagesDto dto) {
         try {
-            HomestayImages entity = HomestayImagesConverter.toEntity(dto);
+            String folderName = dto.getHomestayName();
+            Path folderPath = Paths.get(IMAGE_BASE_PATH, folderName);
 
-            int rowsAffected = homestayImagesMapper.insertImage(entity);
-            if (rowsAffected == 0) {
-                throw new AppException(ErrorCode.HOMESTAY_IMAGE_UPLOAD_FAILED);
+            if (Files.notExists(folderPath)) {
+                Files.createDirectories(folderPath);
             }
 
-            return rowsAffected;
+            int rows = 0;
 
+            // Xử lý ảnh đại diện
+            if (dto.getRepresent() != null && !dto.getRepresent().isEmpty()) {
+                List<String> filenames = new ArrayList<>();
+                for (MultipartFile file : dto.getRepresent()) {
+                    String filename = file.getOriginalFilename();
+                    if (filename == null) continue;
+
+                    Path filePath = folderPath.resolve(filename);
+                    Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+                    filenames.add(filename);
+                }
+
+                HomestayImages entity = new HomestayImages();
+                entity.setHomestayId(dto.getHomestayId());
+                entity.setImageFor("represent");
+                entity.setHomestayImage(String.join(", ", filenames));
+
+                int inserted = homestayImagesMapper.insertImage(entity);
+                if (inserted == 0) throw new AppException(ErrorCode.HOMESTAY_IMAGE_UPLOAD_FAILED);
+                rows += inserted;
+            }
+
+            // Xử lý ảnh thư viện
+            if (dto.getCatalog() != null && !dto.getCatalog().isEmpty()) {
+                List<String> filenames = new ArrayList<>();
+                for (MultipartFile file : dto.getCatalog()) {
+                    String filename = file.getOriginalFilename();
+                    if (filename == null) continue;
+
+                    Path filePath = folderPath.resolve(filename);
+                    Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+                    filenames.add(filename);
+                }
+
+                HomestayImages entity = new HomestayImages();
+                entity.setHomestayId(dto.getHomestayId());
+                entity.setImageFor("catalog");
+                entity.setHomestayImage(String.join(", ", filenames));
+
+                int inserted = homestayImagesMapper.insertImage(entity);
+                if (inserted == 0) throw new AppException(ErrorCode.HOMESTAY_IMAGE_UPLOAD_FAILED);
+                rows += inserted;
+            }
+
+            return rows;
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new AppException(ErrorCode.FILE_IO_ERROR);
         } catch (AppException e) {
             throw e;
-
         } catch (Exception e) {
-            e.printStackTrace(); // hoặc log.error("Lỗi khi tải ảnh homestay", e);
+            e.printStackTrace();
             throw new AppException(ErrorCode.SYSTEM_ERROR);
         }
     }
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public int updateImage(int id, CreationHomestayImagesDto dto) {
         try {
-            boolean exists = homestayImagesMapper.existsImageById(id);
-            if (!exists) {
+            HomestayImages oldImage = homestayImagesMapper.findImageById(id);
+            if (oldImage == null) {
                 throw new AppException(ErrorCode.HOMESTAY_IMAGE_NOT_FOUND);
             }
 
-            HomestayImages entity = HomestayImagesConverter.toEntity(dto);
-            entity.setId(id);
-
-            int rowsAffected = homestayImagesMapper.updateImage(entity);
-            if (rowsAffected == 0) {
-                throw new AppException(ErrorCode.HOMESTAY_IMAGE_UPLOAD_FAILED); // Gợi ý thêm mã lỗi này
+            // Xóa file cũ nếu tồn tại
+            Path oldFilePath = Paths.get("src/main/resources/static/", oldImage.getHomestayImage());
+            if (Files.exists(oldFilePath)) {
+                Files.delete(oldFilePath);
             }
 
-            return rowsAffected;
+            // Tạo tên thư mục
+            String folderName = slugify(dto.getHomestayName());
+            Path folderPath = Paths.get(IMAGE_BASE_PATH, folderName);
 
+            // Tạo thư mục nếu chưa tồn tại
+            if (Files.notExists(folderPath)) {
+                Files.createDirectories(folderPath);
+            }
+
+            // Tạo tên file mới
+//            String filename = System.currentTimeMillis() + "_" + dto.getImageFile().getOriginalFilename();
+//            Path filePath = folderPath.resolve(filename);
+//
+//            // Lưu file mới
+//            Files.copy(dto.getImageFile().getInputStream(), filePath);
+
+            // Update DB
+            HomestayImages newEntity = new HomestayImages();
+            newEntity.setId(id);
+            newEntity.setHomestayId(dto.getHomestayId());
+            newEntity.setHomestayImage("/images/HomeStay/" + folderName + "/");
+            newEntity.setImageFor(dto.getImageFor());
+
+            int rows = homestayImagesMapper.updateImage(newEntity);
+            if (rows == 0) {
+                throw new AppException(ErrorCode.HOMESTAY_IMAGE_UPLOAD_FAILED);
+            }
+
+            return rows;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new AppException(ErrorCode.FILE_IO_ERROR);
         } catch (AppException e) {
             throw e;
-
         } catch (Exception e) {
-            e.printStackTrace(); // hoặc dùng log.error(...) nếu có
+            e.printStackTrace();
             throw new AppException(ErrorCode.SYSTEM_ERROR);
         }
     }
@@ -98,30 +162,52 @@ public class HomestayImagesServiceImpl implements HomestayImageService {
     @Transactional(rollbackFor = Exception.class)
     public int deleteImage(int id) {
         try {
-            boolean exists = homestayImagesMapper.existsImageById(id);
-            if (!exists) {
+            HomestayImages oldImage = homestayImagesMapper.findImageById(id);
+            if (oldImage == null) {
                 throw new AppException(ErrorCode.HOMESTAY_IMAGE_NOT_FOUND);
             }
 
-            int rowsAffected = homestayImagesMapper.deleteImageById(id);
-            if (rowsAffected == 0) {
-                throw new AppException(ErrorCode.HOMESTAY_IMAGE_NOT_FOUND); // Gợi ý thêm mã lỗi này
+            // Xóa file vật lý
+            Path oldFilePath = Paths.get("src/main/resources/static/", oldImage.getHomestayImage());
+            if (Files.exists(oldFilePath)) {
+                Files.delete(oldFilePath);
             }
 
-            return rowsAffected;
+            // Xóa DB
+            int rows = homestayImagesMapper.deleteImageById(id);
+            if (rows == 0) {
+                throw new AppException(ErrorCode.HOMESTAY_IMAGE_NOT_FOUND);
+            }
 
+            return rows;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new AppException(ErrorCode.FILE_IO_ERROR);
         } catch (AppException e) {
             throw e;
-
         } catch (Exception e) {
-            e.printStackTrace(); // hoặc log.error(...) nếu dùng logging
+            e.printStackTrace();
             throw new AppException(ErrorCode.SYSTEM_ERROR);
         }
     }
 
+    @Override
+    public List<HomestayImagesResponseDto> getImagesByHomestayId(String homestayId) {
+        List<HomestayImages> images = homestayImagesMapper.findImagesByHomestayId(homestayId);
+        return HomestayImagesConverter.toDtoList(images);
+    }
 
     @Override
     public HomestayImagesResponseDto findImageById(int id) {
-        return null;
+        HomestayImages image = homestayImagesMapper.findImageById(id);
+        if (image == null) {
+            throw new AppException(ErrorCode.HOMESTAY_IMAGE_NOT_FOUND);
+        }
+        return HomestayImagesConverter.toDto(image);
+    }
+
+    private String slugify(String input) {
+        return input.trim().toLowerCase().replaceAll("[^a-z0-9]+", "-");
     }
 }
