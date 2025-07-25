@@ -3,6 +3,8 @@ package com.stonehnh.payment.dto.response;
 import lombok.*;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -12,6 +14,6 @@ public class PaymentResponseDto {
     private String paymentId;
     private String bookingId;
     private String paymentName;
-    private Date createdTime;
+    private LocalDateTime createdTime;
     private boolean status;
 }

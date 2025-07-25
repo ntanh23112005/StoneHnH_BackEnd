@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.sql.Date;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -15,6 +15,6 @@ public class Payment {
     private String paymentId;
     private String bookingId;
     private String paymentName;
-    private Date createdTime;
+    private LocalDateTime createdTime;
     private boolean status;
 }

@@ -14,6 +14,8 @@ import com.stonehnh.payment.service.PaymentService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -46,14 +48,14 @@ public class PaymentServiceImpl implements PaymentService {
         try {
             Payment payment = PaymentConverter.toEntity(dto);
             payment.setPaymentId(UUID.randomUUID().toString());
-
+            payment.setCreatedTime(LocalDateTime.now());
             int result = paymentMapper.insertPayment(payment);
 
             if (result > 0) {
                 int updateBooking = bookingMapper.updatePaymentStatus(dto.getBookingId(), 1); // 1 = đã thanh toán
 
                 if (updateBooking <= 0) {
-                    throw new AppException();
+                    throw new AppException(ErrorCode.BOOKING_UPDATE_FAILED);
                 }
 
                 return ApiResponse.builder()
@@ -69,7 +71,7 @@ public class PaymentServiceImpl implements PaymentService {
                         .build();
             }
         } catch (Exception e) {
-            throw new AppException();
+            throw new AppException(ErrorCode.PAYMENT_CREATE_FAILED);
         }
     }
 
