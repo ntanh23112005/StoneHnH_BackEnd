@@ -14,12 +14,16 @@ import com.stonehnh.homestay.mapper.HomestayMapper;
 import com.stonehnh.homestay.service.HomestayImageService;
 import com.stonehnh.homestay.service.HomestayRulesService;
 import com.stonehnh.homestay.service.HomestayService;
+import com.stonehnh.owner.dto.response.OwnerResponseDto;
+import com.stonehnh.owner.entity.Owner;
 import com.stonehnh.owner.service.OwnerService;
 import com.stonehnh.review.service.RateService;
 import com.stonehnh.review.service.ReviewService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -77,7 +81,7 @@ public class HomestayServiceImpl implements HomestayService {
             throw e;
 
         } catch (Exception e) {
-            e.printStackTrace(); // hoặc log.error(...) nếu có logging
+//            e.printStackTrace();
             throw new AppException(ErrorCode.SYSTEM_ERROR);
         }
     }
@@ -103,15 +107,42 @@ public class HomestayServiceImpl implements HomestayService {
     @Override
     public HomestayDetailResponseDto getHomestayDetail(String homestayId) {
         HomestayDetailResponseDto dto = new HomestayDetailResponseDto();
-        dto.setHomestay(HomestayConverter.toDto(homestayMapper.findHomestayById(homestayId)));
-        dto.setHomestayRule(homestayRulesService.getRulesByHomestayId(homestayId));
-        dto.setImages(homestayImageService.getImagesByHomestayId(homestayId));
-        dto.setOwner(ownerService.getOwnersByHomestayId(homestayId));
-        dto.setCustomer(customerService.findCustomerByCustomerId(dto.getOwner().getCustomerId()));
-        dto.setReviews(reviewService.findReviewsByHomestayId(homestayId));
-        dto.setRates(rateService.findRateByHomestayId(homestayId));
+
+        // Homestay
+        Homestay homestayEntity = homestayMapper.findHomestayById(homestayId);
+        dto.setHomestay(homestayEntity != null ? HomestayConverter.toDto(homestayEntity) : null);
+
+        // Rules
+        dto.setHomestayRule(homestayRulesService != null ?
+                homestayRulesService.getRulesByHomestayId(homestayId) : null);
+
+        // Images
+        dto.setImages(homestayImageService != null ?
+                homestayImageService.getImagesByHomestayId(homestayId) : null);
+
+        // Owner
+        OwnerResponseDto owner = (ownerService != null) ? ownerService.getOwnersByHomestayId(homestayId) : null;
+        dto.setOwner(owner);
+
+        // Customer
+        if (owner != null && owner.getCustomerId() != null) {
+            dto.setCustomer(customerService != null ?
+                    customerService.findCustomerByCustomerId(owner.getCustomerId()) : null);
+        } else {
+            dto.setCustomer(null);
+        }
+
+        // Reviews
+        dto.setReviews(reviewService != null ?
+                reviewService.findReviewsByHomestayId(homestayId) : Collections.emptyList());
+
+        // Rates
+        dto.setRates(rateService != null ?
+                rateService.findRateByHomestayId(homestayId) : Collections.emptyList());
+
         return dto;
     }
+
 
     @Override
     public int countAllHomestays() {

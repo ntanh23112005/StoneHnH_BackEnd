@@ -11,6 +11,7 @@ import com.stonehnh.review.service.ReviewService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -73,7 +74,7 @@ public class ReviewServiceImpl implements ReviewService {
     public List<ReviewResponeDto> findReviewsByHomestayId(String homestayId) {
         List<Reviews> list = reviewMapper.findReviewsByHomestayId(homestayId);
         if (list == null || list.isEmpty()) {
-            throw new AppException(ErrorCode.REVIEW_NOT_FOUND);
+            return ReviewConverter.toDtoList(Collections.emptyList());
         }
         return ReviewConverter.toDtoList(list);
     }

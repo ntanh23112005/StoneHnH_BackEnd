@@ -11,6 +11,7 @@ import com.stonehnh.review.service.RateService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -77,9 +78,12 @@ public class RateServiceImpl implements RateService {
 
     @Override
     public List<RateResponseDto> findRateByHomestayId(String homestayId) {
-        List<Rate> rates = Optional.ofNullable(rateMapper.findRateByHomestayId(homestayId))
-                .orElseThrow(() -> new AppException(ErrorCode.RATE_NOT_FOUND));
-        return RateConverter.toDtoList(rates);
+        List<Rate> list = rateMapper.findRateByHomestayId(homestayId);
+        if (list == null || list.isEmpty()) {
+            System.out.println(ErrorCode.RATE_NOT_FOUND);
+            return Collections.emptyList();
+        }
+        return RateConverter.toDtoList(list);
     }
 
 
