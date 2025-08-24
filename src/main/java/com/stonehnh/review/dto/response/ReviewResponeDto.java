@@ -15,4 +15,5 @@ public class ReviewResponeDto {
     private String reviewComments;
     private float rateCustomer;
     private Date createdTime;
+    private String customerName;
 }

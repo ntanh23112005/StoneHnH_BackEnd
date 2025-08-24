@@ -6,6 +6,7 @@ import com.stonehnh.booking.dto.request.CreationBookingDetailDto;
 import com.stonehnh.booking.dto.request.CreationBookingDto;
 import com.stonehnh.booking.dto.response.BookingResponseDto;
 import com.stonehnh.booking.dto.response.BookingWithDetailDto;
+import com.stonehnh.booking.dto.response.OwnerBookingResponseDto;
 import com.stonehnh.booking.entity.Booking;
 import com.stonehnh.booking.entity.BookingDetail;
 import com.stonehnh.booking.mapper.BookingDetailMapper;
@@ -110,8 +111,11 @@ public class BookingServiceImpl implements BookingService {
     @Transactional
     public ApiResponse<?> createBookingWithDetail(CreationBookingDto creationBookingDto, CreationBookingDetailDto creationBookingDetailDto) {
         // Insert Booking
+            // tạo bookingId
         String bookingId = generateBookingId();
+            //set Id
         creationBookingDto.setBookingId(bookingId);
+            // set trạng thái CHỜ OWNER DUYỆT
         creationBookingDto.setPaymentStatus(3);
         int bookingResult = bookingMapper.insertBooking(BookingConverter.toEntity(creationBookingDto));
         if (bookingResult <= 0) {
@@ -164,6 +168,11 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public int updatePaymentStatus(String bookingId, int paymentStatus) {
         return bookingMapper.updatePaymentStatus(bookingId, paymentStatus);
+    }
+
+    @Override
+    public OwnerBookingResponseDto getOwnerByBookingId(String bookingId) {
+        return bookingMapper.findOwnerByBookingId(bookingId);
     }
 
     private String generateBookingId() {

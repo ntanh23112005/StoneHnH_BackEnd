@@ -1,6 +1,7 @@
 package com.stonehnh.booking.mapper;
 
 import com.stonehnh.booking.dto.response.BookingWithDetailDto;
+import com.stonehnh.booking.dto.response.OwnerBookingResponseDto;
 import com.stonehnh.booking.entity.Booking;
 import org.apache.ibatis.annotations.*;
 
@@ -107,4 +108,15 @@ public interface BookingMapper {
 
     @Update("UPDATE bookings SET payment_status = #{paymentStatus} WHERE booking_id = #{bookingId}")
     int updatePaymentStatus(@Param("bookingId") String bookingId, @Param("paymentStatus") int paymentStatus);
+
+    @Select("""
+        SELECT bo.booking_id AS bookingId,
+               own.customer_id AS customerId,
+               bo.total_price AS totalPrice
+        FROM bookings bo
+        LEFT JOIN booking_details bod ON bo.booking_id = bod.booking_id
+        LEFT JOIN owners own ON bod.homestay_id = own.homestay_id
+        WHERE bo.booking_id = #{bookingId}
+    """)
+    OwnerBookingResponseDto findOwnerByBookingId(@Param("bookingId") String bookingId);
 }

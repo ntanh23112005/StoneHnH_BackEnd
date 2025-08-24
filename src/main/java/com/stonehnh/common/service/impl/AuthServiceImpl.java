@@ -26,7 +26,8 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
-public class AuthServiceImpl implements AuthService {
+public class
+AuthServiceImpl implements AuthService {
 
     private final JwtUtil jwtUtil;
     private final CustomerService customerService;
@@ -185,7 +186,7 @@ public class AuthServiceImpl implements AuthService {
     private ResponseCookie createRefreshTokenCookie(String refreshToken) {
         return ResponseCookie.from("refreshToken", refreshToken)
                 .httpOnly(true)
-                .path("/api/auth/refresh")
+                .path("/api/v1/auth/refresh")
                 .maxAge(Duration.ofDays(7))
                 .build();
     }

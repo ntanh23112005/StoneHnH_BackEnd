@@ -4,6 +4,7 @@ import com.stonehnh.booking.dto.request.CreationBookingDetailDto;
 import com.stonehnh.booking.dto.request.CreationBookingDto;
 import com.stonehnh.booking.dto.response.BookingResponseDto;
 import com.stonehnh.booking.dto.response.BookingWithDetailDto;
+import com.stonehnh.booking.dto.response.OwnerBookingResponseDto;
 import com.stonehnh.booking.entity.Booking;
 import com.stonehnh.common.handler.ApiResponse;
 import com.stonehnh.customer.dto.request.CreationCustomerDto;
@@ -65,4 +66,6 @@ public interface BookingService {
     List<BookingWithDetailDto> getAllBookingsWithDetails();
 
     int updatePaymentStatus(String bookingId, int paymentStatus);
+
+    OwnerBookingResponseDto getOwnerByBookingId(String bookingId);
 }

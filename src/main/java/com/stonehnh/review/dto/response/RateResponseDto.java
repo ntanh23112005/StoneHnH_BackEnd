@@ -22,4 +22,7 @@ public class RateResponseDto {
     private float cleanlinessLevel;
     private float averageRate;
     private String rateTitle;
+
+    private String customerName;
+    private String customerPicture;
 }

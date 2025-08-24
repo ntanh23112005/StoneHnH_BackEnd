@@ -19,7 +19,7 @@ public class AuthController {
         return authService.login(req);
     }
 
-    @PostMapping("/refresh")
+    @GetMapping("/refresh")
     public ResponseEntity<?> refresh(@CookieValue(value = "refreshToken", required = false) String token) {
         return authService.refresh(token);
     }

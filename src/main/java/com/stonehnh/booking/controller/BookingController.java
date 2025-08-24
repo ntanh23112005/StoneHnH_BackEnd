@@ -3,6 +3,7 @@ package com.stonehnh.booking.controller;
 import com.stonehnh.booking.dto.request.CreationBookingWrapperDto;
 import com.stonehnh.booking.dto.response.BookingResponseDto;
 import com.stonehnh.booking.dto.response.BookingWithDetailDto;
+import com.stonehnh.booking.dto.response.OwnerBookingResponseDto;
 import com.stonehnh.booking.service.BookingService;
 import com.stonehnh.common.handler.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,6 +84,16 @@ public class BookingController {
         return ApiResponse.builder()
                 .success(result > 0)
                 .message(result > 0 ? "Đã chấp nhận đơn hàng." : "Không tìm thấy booking.")
+                .data(result)
+                .build();
+    }
+
+    @GetMapping("/owner/{bookingId}")
+    public ApiResponse<Object> getOwnerByBookingId(@PathVariable String bookingId) {
+        OwnerBookingResponseDto result = bookingService.getOwnerByBookingId(bookingId);
+        return ApiResponse.builder()
+                .success(true)
+                .message("Get ownerId by bookingId success")
                 .data(result)
                 .build();
     }

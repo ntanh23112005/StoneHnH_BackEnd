@@ -78,13 +78,11 @@ public class RateServiceImpl implements RateService {
 
     @Override
     public List<RateResponseDto> findRateByHomestayId(String homestayId) {
-        List<Rate> list = rateMapper.findRateByHomestayId(homestayId);
+        List<RateResponseDto> list = rateMapper.findRateByHomestayId(homestayId);
         if (list == null || list.isEmpty()) {
             System.out.println(ErrorCode.RATE_NOT_FOUND);
             return Collections.emptyList();
         }
-        return RateConverter.toDtoList(list);
+        return list;
     }
-
-
 }

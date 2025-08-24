@@ -1,4 +1,5 @@
 package com.stonehnh.review.mapper;
+import com.stonehnh.review.dto.response.RateResponseDto;
 import com.stonehnh.review.entity.Rate;
 import org.apache.ibatis.annotations.*;
 
@@ -74,7 +75,13 @@ public interface RateMapper {
      * @param homestayId Mã đánh giá cần tìm
      * @return Thông tin đánh giá nếu tồn tại, ngược lại trả về null
      */
-    @Select("SELECT rate_id, homestay_id, customer_id, comments, rated_time, price, location, communication, " +
-            "exactly, cleanliness_level, average_rate, rate_title FROM rates WHERE homestay_id = #{homestayId}")
-    List<Rate> findRateByHomestayId(@Param("homestayId") String homestayId);
+    @Select("SELECT r.rate_id, r.homestay_id, r.customer_id, r.comments, r.rated_time, " +
+            "r.price, r.location, r.communication, " +
+            "r.exactly, r.cleanliness_level, r.average_rate, r.rate_title, " +
+            "c.customer_name, " +
+            "c.customer_picture " +
+            "FROM rates r " +
+            "LEFT JOIN customers c on c.customer_id = r.customer_id  " +
+            "WHERE r.homestay_id = #{homestayId}")
+    List<RateResponseDto> findRateByHomestayId(@Param("homestayId") String homestayId);
 }
